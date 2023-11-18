@@ -1,0 +1,63 @@
+
+services:
+  backend:
+    build:
+      context: .
+      target: run
+      args:
+        SERVER_PORT: 8000
+    ports:
+      - "$SERVER_PORT:8000"
+    secrets:
+      - db_url
+    depends_on:
+      database:
+        condition: service_healthy
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:5050"
+    volumes:
+      - type: bind
+        source: ./pgadmin_servers.json
+        target: /pgadmin4/servers.json
+    environment:
+      PGADMIN_LISTEN_PORT: 5050
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: qwerty12
+    depends_on:
+      database:
+        condition: service_healthy
+  
+  database:
+    image: postgres:16
+    healthcheck:
+      test: pg_isready -U $DB_USERNAME -d $DB_NAME
+      interval: 3s
+      retries: 15
+      start_period: 5s
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER_FILE: "/run/secrets/db_username"
+      POSTGRES_PASSWORD_FILE: "/run/secrets/db_password"
+    secrets:
+      - db_username
+      - db_password
+
+
+secrets:
+  db_username:
+    environment: DB_USERNAME
+  db_password:
+    environment: DB_PASSWORD
+  db_url:
+    environment: DB_URL
+
+
+volumes:
+  db_data:
