@@ -3,9 +3,8 @@ from fastapi import APIRouter
 router = APIRouter(prefix="/player")
 
 
-@router.post("/", tags=["player"])
+@router.post("/", tags=["player"], description="team_id is defined by leader.team.id")
 def post_player(gto_id: int,
-                team_id: int,
                 first_name: str,
                 last_name: str,
                 patronymic: str,
@@ -29,7 +28,6 @@ def get_player(player_id: int):
 
 @router.put("/", tags=["player"])
 def update_player(player_id: int,
-                  team_id: int,
                   gto_id: int,
                   first_name: str,
                   last_name: str,
