@@ -8,6 +8,8 @@ fastapi = "*"
 sqlalchemy = "*"
 psycopg = {extras = ["binary"], version = "*"}
 uvicorn = {extras = ["standart"], version = "*"}
+pydantic = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 
