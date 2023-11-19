@@ -1,35 +1,36 @@
 from fastapi import APIRouter
 
+from app.models.user import UserRole
 from app.schemas.user_create_schema import UserCreateSchema
 from app.schemas.user_update_schema import UserUpdateSchema
 from app.schemas.user_schema import UserSchema
 import app.services.user_service as user_service
 
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/users")
 
 
 @router.post("/",
-             response_model=UserCreateSchema,
+             response_model=UserSchema,
              tags=["user"])
 def post_user(user: UserCreateSchema):
     return user_service.create(user)
 
 
-@router.get("/",
-            response_model=UserSchema,
+@router.get("/all",
+            response_model=list[UserSchema],
             tags=["user"])
-def get_user(user_id: int):
-    return UserSchema()
+def get_all_user_by_role(role: UserRole):
+    return user_service.get_all_by_role(role)
 
 
 @router.put("/",
-            response_model=UserUpdateSchema,
+            response_model=UserSchema,
             tags=["user"])
 def update_user(user: UserUpdateSchema):
-    pass
+    return user_service.update(user.id, user)
 
 
 @router.delete("/",
                tags=["user"])
 def delete_user(user_id: int):
-    pass
+    return user_service.delete(user_id)

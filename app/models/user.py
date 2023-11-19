@@ -1,7 +1,8 @@
 from enum import StrEnum
 
+from sqlalchemy import Date, String
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Date
+from datetime import date
 
 from app.core.db import Base
 
@@ -20,7 +21,7 @@ class User(Base):
     first_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))
     patronymic: Mapped[str] = mapped_column(String(50))
-    birth_date: Mapped[Date] = mapped_column(Date)
+    birth_date: Mapped[date] = mapped_column(Date)
     country: Mapped[str] = mapped_column(String(50))
     city: Mapped[str] = mapped_column(String(50))
     phone: Mapped[str] = mapped_column(String(50))

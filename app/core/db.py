@@ -22,8 +22,7 @@ def initialize():
 
     _engine = create_engine(settings.db_url)
     _session_factory = scoped_session(
-        sessionmaker(_engine, autoflush=False, expire_on_commit=True),
-        lambda: asyncio.current_task(),
+        sessionmaker(_engine, autoflush=False, expire_on_commit=True)
     )
 
     Base.metadata.create_all(_engine)
