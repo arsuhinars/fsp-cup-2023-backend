@@ -4,7 +4,7 @@ from typing import Callable
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
 
-from app.models import User
+from app.models.user import User
 
 
 def get_by_id(session_factory, user_id: int) -> User | None:

@@ -4,9 +4,11 @@ from http import HTTPStatus
 from email_validator import EmailNotValidError, validate_email
 
 from app.exceptions import ValidationException, EntityAlreadyExistsException
-from app.models import User
+from app.models.user import User
 import app.repositories.user_repository as user_repo
-from app.schemas import UserCreateSchema, UserSchema, UserUpdateSchema
+from app.schemas.user_create_schema import UserCreateSchema
+from app.schemas.user_schema import UserSchema
+from app.schemas.user_update_schema import UserUpdateSchema
 import app.core.db as db
 
 

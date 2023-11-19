@@ -10,6 +10,7 @@ psycopg = {extras = ["binary"], version = "*"}
 uvicorn = {extras = ["standart"], version = "*"}
 pydantic = "*"
 pydantic-settings = "*"
+email-validator = "*"
 
 [dev-packages]
 

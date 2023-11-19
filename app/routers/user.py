@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from app.schemas import UserUpdateSchema, UserCreateSchema
+from app.schemas.user_create_schema import UserCreateSchema
+from app.schemas.user_update_schema import UserUpdateSchema
 from app.schemas.user_schema import UserSchema
 import app.services.user_service as user_service
 
