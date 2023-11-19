@@ -1,44 +1,34 @@
 from fastapi import APIRouter
 
+from app.schemas import UserUpdateSchema, UserCreateSchema
+from app.schemas.user_schema import UserSchema
+import app.services.user_service as user_service
+
 router = APIRouter(prefix="/user")
 
 
-@router.post("/", tags=["user"])
-def post_user(password: str,
-              first_name: str,
-              last_name: str,
-              patronymic: str,
-              birth_date: str,
-              country: str,
-              city: str,
-              phone: str,
-              email: str,
-              role: str,
-              rank: str):
-    pass
+@router.post("/",
+             response_model=UserCreateSchema,
+             tags=["user"])
+def post_user(user: UserCreateSchema):
+    return user_service.create(user)
 
 
-@router.get("/", tags=["user"])
+@router.get("/",
+            response_model=UserSchema,
+            tags=["user"])
 def get_user(user_id: int):
+    return UserSchema()
+
+
+@router.put("/",
+            response_model=UserUpdateSchema,
+            tags=["user"])
+def update_user(user: UserUpdateSchema):
     pass
 
 
-@router.put("/", tags=["user"])
-def update_user(user_id: int,
-                password: str,
-                first_name: str,
-                last_name: str,
-                patronymic: str,
-                birth_date: str,
-                country: str,
-                city: str,
-                phone: str,
-                email: str,
-                role: str,
-                rank: str):
-    pass
-
-
-@router.delete("/", tags=["user"])
+@router.delete("/",
+               tags=["user"])
 def delete_user(user_id: int):
     pass

@@ -34,3 +34,8 @@ class ForbiddenException(AppException):
         super().__init__(
             HTTPStatus.FORBIDDEN, "Access is denied" if details is None else details
         )
+
+
+class ValidationException(AppException):
+    def __init__(self, details: str):
+        super().__init__(HTTPStatus.BAD_REQUEST, details)

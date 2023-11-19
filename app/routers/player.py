@@ -17,7 +17,7 @@ def post_player(gto_id: int,
                 phone: str,
                 email: str,
                 rank: str,
-                accepted: bool):
+                pd_accepted: bool):
     pass
 
 
