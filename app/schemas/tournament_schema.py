@@ -18,16 +18,17 @@ class TournamentSchema(BaseModel):
     date_award: Annotated[date, Field(examples=["2000-01-01"])]
     state: Annotated[str, Field(max_length=50, examples=["State"])]
 
-@staticmethod
-def from_model(tournament: Tournament) -> "TournamentSchema":
-    return TournamentSchema(
-        id=tournament.id,
-        name=tournament.name,
-        location=tournament.location,
-        discipline=tournament.discipline,
-        date_registration=tournament.date_registration,
-        date_start=tournament.date_start,
-        date_end=tournament.date_end,
-        date_award=tournament.date_award,
-        state=tournament.state
-    )
+    @staticmethod
+    def from_model(tournament: Tournament) -> "TournamentSchema":
+        return TournamentSchema(
+            id=tournament.id,
+            name=tournament.name,
+            location=tournament.location,
+            discipline=tournament.discipline,
+            date_registration=tournament.date_registration,
+            date_start=tournament.date_start,
+            date_end=tournament.date_end,
+            date_award=tournament.date_award,
+            state=tournament.state
+        )   
+
