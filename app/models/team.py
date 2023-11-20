@@ -15,3 +15,4 @@ class Team(Base):
 
     leader: User = relationship(back_populates="team")
     team_compositions: Mapped[list[TeamComposition]] = relationship(back_populates="team")
+    

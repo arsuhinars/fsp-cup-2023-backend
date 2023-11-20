@@ -14,9 +14,8 @@ def get_by_name(session, name: str) -> Team | None:
     )
     return result.scalar_one_or_none()
 
-def get_my_team(session):
-    pass
-    #TODO !!!!!!!!!!!!!!!!
+def get_by_leader_id(session, leader_id: int) -> Team | None:
+    return session.get(Team, leader_id)
 
 def save(session, team: Team) -> Team:
     session.add(team)

@@ -2,7 +2,7 @@ from hashlib import md5
 
 from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from app.models.user import UserRole
-import app.repositories.user_repo as user_repo
+import app.repositories.user_repository as user_repo
 from app.schemas.user_create_schema import UserCreateSchema
 from app.schemas.user_schema import UserSchema
 from app.schemas.user_update_schema import UserUpdateSchema
