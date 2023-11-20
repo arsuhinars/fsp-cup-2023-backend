@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 from sqlalchemy import Date, String, Enum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
 
 from app.core.db import Base
@@ -34,3 +34,5 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(50))
     role: Mapped[UserRole] = mapped_column(Enum(UserRole))
     judge_rank: Mapped[JudgeRankEnum | None] = mapped_column(Enum(JudgeRankEnum))
+
+    team: Mapped["Team"] = relationship(back_populates="leader")
