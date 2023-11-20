@@ -16,6 +16,7 @@ def get_by_name(session, name: str) -> Team | None:
 
 def get_my_team(session):
     pass
+    #TODO !!!!!!!!!!!!!!!!
 
 def save(session, team: Team) -> Team:
     session.add(team)

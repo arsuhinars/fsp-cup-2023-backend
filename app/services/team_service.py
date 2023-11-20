@@ -7,9 +7,12 @@ import app.core.db as db
 from app.schemas.team_update_schema import TeamUpdateSchema
 
 
-def get_my():
-    pass
-    #TODO !!!!!!!!!!!!!!!!!!!
+def get_by_leader_id(leader_id: int) -> TeamSchema:
+    with db.create_session() as session:
+        team = team_repo.get_by_leader_id(session, leader_id)
+        if team is None:
+            raise EntityNotFoundException("Team not found")
+        return TeamSchema.from_model(team)
 
 def create(team: TeamCreateSchema) -> TeamSchema:
     team = TeamCreateSchema.model_validate(team).to_Model()
