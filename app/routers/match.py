@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/match")
+router = APIRouter(prefix="/match", tags=["match"])
 
 
-@router.post("/", tags=["match"])
+@router.post("/")
 def post_match(name: str,
                location: str,
                discipline: str,
@@ -16,12 +16,12 @@ def post_match(name: str,
     pass
 
 
-@router.get("/", tags=["match"])
+@router.get("/")
 def get_match(match_id: int):
     pass
 
 
-@router.put("/", tags=["match"])
+@router.put("/")
 def update_match(match_id: int,
                  name: str,
                  location: str,
@@ -35,6 +35,6 @@ def update_match(match_id: int,
     pass
 
 
-@router.delete("/", tags=["match"])
+@router.delete("/")
 def delete_match(match_id: int):
     pass

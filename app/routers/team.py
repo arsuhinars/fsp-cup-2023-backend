@@ -1,24 +1,24 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/team")
+router = APIRouter(prefix="/teams", tags=["team"])
 
 
-@router.post("/", tags=["team"])
+@router.post("/")
 def post_team(name: str):
     pass
 
 
-@router.get("/", tags=["team"])
+@router.get("/")
 def get_team(team_id: int):
     pass
 
 
-@router.put("/", tags=["team"])
+@router.put("/")
 def update_team(team_id: int,
                 name: str):
     pass
 
 
-@router.delete("/", tags=["team"])
+@router.delete("/")
 def delete_team(team_id: int):
     pass
