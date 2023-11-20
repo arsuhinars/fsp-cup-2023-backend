@@ -30,5 +30,6 @@ class Player(Base):
     citizenship: Mapped[str] = mapped_column(String(50))
     rank: Mapped[str] = mapped_column(String(50))
     pd_accepted: Mapped[bool] = mapped_column(default=False)
+    deleted: Mapped[bool] = mapped_column(default=False)
 
     team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="player")
