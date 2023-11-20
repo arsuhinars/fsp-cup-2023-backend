@@ -1,10 +1,16 @@
 from enum import StrEnum
 
-from sqlalchemy import Date, String
+from sqlalchemy import Date, String, Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import date
 
 from app.core.db import Base
+
+
+class JudgeRankEnum(StrEnum):
+    MATCH_JUDGE = "MATCH_JUDGE"
+    MAIN_TOURNAMENT_JUDGE = "MAIN_TOURNAMENT_JUDGE"
+    TOURNAMENT_SECRETARY = "TOURNAMENT_SECRETARY"
 
 
 class UserRole(StrEnum):
@@ -26,4 +32,5 @@ class User(Base):
     city: Mapped[str] = mapped_column(String(50))
     phone: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(50))
-    role: Mapped[UserRole]
+    role: Mapped[UserRole] = mapped_column(Enum(UserRole))
+    judge_rank: Mapped[JudgeRankEnum | None] = mapped_column(Enum(JudgeRankEnum))

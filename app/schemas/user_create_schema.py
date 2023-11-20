@@ -3,7 +3,7 @@ from hashlib import md5
 
 from typing_extensions import Annotated
 
-from app.models.user import UserRole, User
+from app.models.user import UserRole, User, JudgeRankEnum
 from pydantic import BaseModel, Field
 
 
@@ -19,9 +19,11 @@ class UserCreateSchema(BaseModel):
                                 examples=["+7(999)999-99-99"])]
     email: Annotated[str, Field(pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
                                 examples=["address@domain.com"])]
-    role: UserRole
+    role: Annotated[UserRole, Field()]
+    judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]
 
     def to_model(self) -> User:
+        print('\nJR >>>', self.judge_rank, '<<<\n')
         return User(
             password_hash=md5(self.password.encode()).hexdigest(),
             first_name=self.first_name,
@@ -32,5 +34,6 @@ class UserCreateSchema(BaseModel):
             city=self.city,
             phone=self.phone,
             email=self.email,
-            role=self.role
+            role=self.role,
+            judge_rank=self.judge_rank
         )

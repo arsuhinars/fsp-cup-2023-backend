@@ -2,7 +2,7 @@ from datetime import date
 
 from typing_extensions import Annotated
 
-from app.models.user import UserRole, User
+from app.models.user import UserRole, User, JudgeRankEnum
 from pydantic import BaseModel, Field
 
 
@@ -19,6 +19,7 @@ class UserSchema(BaseModel):
     email: Annotated[str, Field(pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
                                 examples=["address@domain.com"])]
     role: UserRole
+    judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]
 
     @staticmethod
     def from_model(user: User) -> "UserSchema":
@@ -32,5 +33,6 @@ class UserSchema(BaseModel):
             city=user.city,
             phone=user.phone,
             email=user.email,
-            role=user.role
+            role=user.role,
+            judge_rank=user.judge_rank
         )
