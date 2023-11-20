@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+from app.models.team_composition_set import TeamCompositionSet
 
 
 class Tournament(Base):
