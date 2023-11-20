@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from sqlalchemy import Date, String, Enum, ForeignKey
+from sqlalchemy import Date, String, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import date
 
