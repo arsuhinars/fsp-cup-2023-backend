@@ -13,7 +13,7 @@ class AppSettings(BaseSettings):
     )
 
     db_url: str
-    initial_user_schema: UserCreateSchema | None
+    initial_user_schema: UserCreateSchema | None = None
     allow_origins: list[str]
 
 
