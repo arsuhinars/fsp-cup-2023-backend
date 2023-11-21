@@ -12,6 +12,6 @@ class Match(Base):
     team_b_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
     team_winner_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
 
-    team_a: Mapped["Team"] = relationship("Team")
-    team_b: Mapped["Team"] = relationship("Team")
-    team_winner: Mapped["Team"] = relationship("Team")
+    team_a: Mapped["Team"] = relationship(foreign_keys=[team_a_id])
+    team_b: Mapped["Team"] = relationship(foreign_keys=[team_b_id])
+    team_winner: Mapped["Team"] = relationship(foreign_keys=[team_winner_id])

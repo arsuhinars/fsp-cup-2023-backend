@@ -13,7 +13,7 @@ class Team(Base):
     leader_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     name: Mapped[str] = mapped_column(String(50))
 
-    leader: User = relationship(back_populates="team")
+    leader: Mapped[User] = relationship(back_populates="team")
     team_compositions: Mapped[list[TeamComposition]] = relationship(
         back_populates="team"
     )

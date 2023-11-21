@@ -1,29 +1,23 @@
 from datetime import date
-from enum import StrEnum
 
-from sqlalchemy import Date, Enum, String
+from sqlalchemy import Date, Enum, Index, LargeBinary, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app import config
 from app.core.db import Base
-
-
-class JudgeRankEnum(StrEnum):
-    MATCH_JUDGE = "MATCH_JUDGE"
-    MAIN_TOURNAMENT_JUDGE = "MAIN_TOURNAMENT_JUDGE"
-    TOURNAMENT_SECRETARY = "TOURNAMENT_SECRETARY"
-
-
-class UserRole(StrEnum):
-    ADMIN = "ADMIN"
-    JUDGE = "JUDGE"
-    TEAM_CAPTAIN = "TEAM_CAPTAIN"
+from app.schemas.user_schema import JudgeRankEnum, UserRole
 
 
 class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    password_hash: Mapped[str] = mapped_column(String(255))
+    password_hash: Mapped[bytes] = mapped_column(
+        LargeBinary(config.PASSWORD_HASH_LENGTH)
+    )
+    password_salt: Mapped[bytes] = mapped_column(
+        LargeBinary(config.PASSWORD_SALT_LENGTH)
+    )
     first_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))
     patronymic: Mapped[str] = mapped_column(String(50))
@@ -33,6 +27,12 @@ class User(Base):
     phone: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(50))
     role: Mapped[UserRole] = mapped_column(Enum(UserRole))
+
     judge_rank: Mapped[JudgeRankEnum | None] = mapped_column(Enum(JudgeRankEnum))
 
-    team: Mapped["Team"] = relationship(back_populates="leader")
+    # team: Mapped["Team"] = relationship(back_populates="leader")
+
+    __table_args__ = (
+        UniqueConstraint("email"),
+        Index("idx_email", "email", unique=True),
+    )
