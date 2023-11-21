@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.schemas.user_create_schema import UserCreateSchema
+
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -11,6 +13,7 @@ class AppSettings(BaseSettings):
     )
 
     db_url: str
+    initial_user_schema: UserCreateSchema | None
 
 
 settings = AppSettings(_env_file="dev.env")
