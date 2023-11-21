@@ -9,7 +9,8 @@ class TeamComposition(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
-
+    is_active: Mapped[bool] = mapped_column(default=True)
+    
     team: Mapped["Team"] = relationship()
     team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
         back_populates="team_composition"

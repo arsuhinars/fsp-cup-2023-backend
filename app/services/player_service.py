@@ -1,5 +1,7 @@
 import app.core.db as db
 from app.models.player import Player
+from app.models.team_composition_set import TeamCompositionSet
+from app.repositories import team_composition_set_repository
 import app.repositories.player_repository as player_repo
 from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from app.schemas.player_schema import PlayerSchema
@@ -22,6 +24,12 @@ def create(dto: PlayerCreateSchema) -> PlayerSchema:
         player = player_repo.save(session, player)
         return PlayerSchema.model_validate(player)
     
+
+def create_by_team_id(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
+    player = Player(**dto.model_dump())
+    with db.create_session() as session:
+        pass
+     
 
 def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
     with db.create_session() as session:
@@ -51,6 +59,17 @@ def get_all() -> list[PlayerSchema]:
     with db.create_session() as session:
         players = player_repo.get_all(session)
         return list(map(PlayerSchema.model_validate, players))
+    
+
+def get_all_in_team(team_id: int) -> list[PlayerSchema]:
+    with db.create_session() as session:
+        team = team_composition_set_repository.get_by_id(session, team_id)
+        if team is None:
+            raise EntityNotFoundException(
+                "Team not found"
+            )
+        return [PlayerSchema.model_validate(player) for player in team]
+
     
 def get_by_id(player_id: int) -> PlayerSchema:
     with db.create_session() as session:
