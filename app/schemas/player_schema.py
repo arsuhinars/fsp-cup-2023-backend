@@ -3,8 +3,6 @@ from datetime import date
 from pydantic import BaseModel, ConfigDict, Field
 from typing_extensions import Annotated
 
-from app.models.player import Player
-
 class PlayerSchema(BaseModel):
     id: int
     gto_id: int
