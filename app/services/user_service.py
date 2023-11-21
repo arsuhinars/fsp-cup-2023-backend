@@ -5,7 +5,6 @@ from app.models.user import UserRole
 import app.repositories.user_repo as user_repo
 from app.schemas.user_create_schema import UserCreateSchema
 from app.schemas.user_schema import UserSchema
-from app.schemas.user_update_schema import UserUpdateSchema
 import app.core.db as db
 
 
@@ -39,8 +38,8 @@ def get_by_email(email: str) -> UserSchema:
         return UserSchema.from_model(user)
 
 
-def update(user_id: int, user: UserUpdateSchema) -> UserSchema:
-    UserUpdateSchema.model_validate(user)
+def update(user_id: int, user: UserSchema) -> UserSchema:
+    UserSchema.model_validate(user)
     with db.create_session() as session:
         db_user = user_repo.get_by_id(session, user_id)
         if db_user is None:

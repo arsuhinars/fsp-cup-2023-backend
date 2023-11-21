@@ -2,7 +2,6 @@ from fastapi import APIRouter
 
 from app.models.user import UserRole
 from app.schemas.user_create_schema import UserCreateSchema
-from app.schemas.user_update_schema import UserUpdateSchema
 from app.schemas.user_schema import UserSchema
 import app.services.user_service as user_service
 
@@ -25,12 +24,12 @@ def get_current_user():
 
 
 @router.put("/", response_model=UserSchema)
-def update_user(user: UserUpdateSchema):
+def update_user(user: UserSchema):
     return user_service.update(user.id, user)
 
 
 @router.put("/current")
-def update_current_user(password: str, user: UserUpdateSchema):
+def update_current_user(password: str, user: UserSchema):
     pass
 
 

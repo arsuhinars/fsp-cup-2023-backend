@@ -36,3 +36,18 @@ class UserSchema(BaseModel):
             role=user.role,
             judge_rank=user.judge_rank
         )
+
+    def to_model(self, user: User) -> User:
+        return User(
+            id=self.id,
+            password_hash=user.password_hash,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            patronymic=self.patronymic,
+            birth_date=self.birth_date,
+            country=self.country,
+            city=self.city,
+            phone=self.phone,
+            email=self.email,
+            role=self.role
+        )
