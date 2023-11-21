@@ -11,4 +11,6 @@ class TeamComposition(Base):
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
 
     team: Mapped["Team"] = relationship(back_populates="team_compositions")
-    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="team_compositions")
+    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
+        back_populates="team_compositions"
+    )

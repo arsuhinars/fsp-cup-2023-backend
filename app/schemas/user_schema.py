@@ -1,9 +1,9 @@
 from datetime import date
 
+from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
-from app.models.user import UserRole, User, JudgeRankEnum
-from pydantic import BaseModel, Field
+from app.models.user import JudgeRankEnum, User, UserRole
 
 
 class UserSchema(BaseModel):
@@ -14,10 +14,20 @@ class UserSchema(BaseModel):
     birth_date: Annotated[date, Field(examples=["2000-01-01"])]
     country: Annotated[str, Field(max_length=50, examples=["Country"])]
     city: Annotated[str, Field(max_length=50, examples=["City"])]
-    phone: Annotated[str, Field(pattern=r"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$",
-                                examples=["+7(999)999-99-99"])]
-    email: Annotated[str, Field(pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-                                examples=["address@domain.com"])]
+    phone: Annotated[
+        str,
+        Field(
+            pattern=r"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$",
+            examples=["+7(999)999-99-99"],
+        ),
+    ]
+    email: Annotated[
+        str,
+        Field(
+            pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+            examples=["address@domain.com"],
+        ),
+    ]
     role: UserRole
     judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]
 
@@ -34,5 +44,5 @@ class UserSchema(BaseModel):
             phone=user.phone,
             email=user.email,
             role=user.role,
-            judge_rank=user.judge_rank
+            judge_rank=user.judge_rank,
         )

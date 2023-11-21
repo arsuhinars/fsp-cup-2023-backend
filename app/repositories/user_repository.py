@@ -12,9 +12,7 @@ def get_by_id(session, user_id: int) -> User | None:
 
 
 def get_by_email(session, email: str) -> User | None:
-    result = session.execute(
-        select(User).where(User.email == email).limit(1)
-    )
+    result = session.execute(select(User).where(User.email == email).limit(1))
     return result.scalar_one_or_none()
 
 

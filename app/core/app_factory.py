@@ -3,13 +3,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.core import db
-from app.routers.status import router as status_router
-from app.routers.user import router as user_router
-from app.routers.player import router as player_router
-from app.routers.tournament import router as tournament_router
 from app.routers.match import router as match_router
+from app.routers.player import router as player_router
+from app.routers.status import router as status_router
 from app.routers.team import router as team_router
 from app.routers.team_composition import router as team_composition_router
+from app.routers.tournament import router as tournament_router
+from app.routers.user import router as user_router
 
 
 @asynccontextmanager

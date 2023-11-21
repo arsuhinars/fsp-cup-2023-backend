@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
+import app.services.user_service as user_service
 from app.models.user import UserRole
 from app.schemas.user_create_schema import UserCreateSchema
-from app.schemas.user_update_schema import UserUpdateSchema
 from app.schemas.user_schema import UserSchema
-import app.services.user_service as user_service
+from app.schemas.user_update_schema import UserUpdateSchema
 
 router = APIRouter(prefix="/users", tags=["user"])
 

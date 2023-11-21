@@ -1,8 +1,8 @@
+from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import Date, String, Enum
+from sqlalchemy import Date, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date
 
 from app.core.db import Base
 

@@ -14,5 +14,6 @@ class Team(Base):
     name: Mapped[str] = mapped_column(String(50))
 
     leader: User = relationship(back_populates="team")
-    team_compositions: Mapped[list[TeamComposition]] = relationship(back_populates="team")
-    
+    team_compositions: Mapped[list[TeamComposition]] = relationship(
+        back_populates="team"
+    )

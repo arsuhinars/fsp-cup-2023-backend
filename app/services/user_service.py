@@ -1,12 +1,12 @@
 from hashlib import md5
 
+import app.core.db as db
+import app.repositories.user_repository as user_repo
 from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from app.models.user import UserRole
-import app.repositories.user_repo as user_repo
 from app.schemas.user_create_schema import UserCreateSchema
 from app.schemas.user_schema import UserSchema
 from app.schemas.user_update_schema import UserUpdateSchema
-import app.core.db as db
 
 
 def create(user: UserCreateSchema) -> UserSchema:

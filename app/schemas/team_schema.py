@@ -1,8 +1,5 @@
-from datetime import date
-
-from typing_extensions import Annotated
-
 from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 from app.models.team import Team
 
@@ -13,7 +10,4 @@ class TeamSchema(BaseModel):
 
     @staticmethod
     def from_model(team: Team) -> "TeamSchema":
-        return TeamSchema(
-            id=team.id,
-            name=team.name
-        )
+        return TeamSchema(id=team.id, name=team.name)
