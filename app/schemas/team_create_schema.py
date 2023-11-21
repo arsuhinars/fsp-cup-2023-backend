@@ -10,5 +10,3 @@ class TeamCreateSchema(BaseModel):
     name: Annotated[str, Field(max_length=50, examples=["Name"])]
 
 
-def to_model(self) -> Team:
-    return Team(id=self.id, leader_id=self.leader_id, name=self.name)

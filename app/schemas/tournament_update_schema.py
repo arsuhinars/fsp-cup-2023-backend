@@ -17,16 +17,3 @@ class TournamentUpdateSchema(BaseModel):
     date_award: Annotated[date, Field(examples=["2000-01-01"])]
     state: Annotated[str, Field(max_length=50, examples=["State"])]
 
-
-def to_model(self, tournament: Tournament) -> Tournament:
-    return Tournament(
-        id=self.id,
-        name=self.name,
-        location=self.location,
-        discipline=self.discipline,
-        date_registration=self.date_registration,
-        date_start=self.date_start,
-        date_end=self.date_end,
-        date_award=self.date_award,
-        state=self,
-    )
