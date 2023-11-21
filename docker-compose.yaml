@@ -8,6 +8,9 @@ services:
         SERVER_PORT: 8000
     ports:
       - "$SERVER_PORT:8000"
+    environment:
+      INITIAL_USER_SCHEMA: ${INITIAL_USER_SCHEMA-null}
+      ALLOW_ORIGINS: $ALLOW_ORIGINS
     secrets:
       - db_url
     depends_on:

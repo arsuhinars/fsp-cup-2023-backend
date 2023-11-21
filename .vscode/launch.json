@@ -11,7 +11,9 @@
             "module": "uvicorn",
             "args": [
                 "app.main:app",
-                "--reload"
+                "--reload",
+                "--port",
+                "$SERVER_PORT"
             ],
             "jinja": true,
             "justMyCode": true,
