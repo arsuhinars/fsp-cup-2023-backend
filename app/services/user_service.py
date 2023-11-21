@@ -1,25 +1,45 @@
-from hashlib import md5
-
-from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from app.models.user import UserRole
-import app.repositories.user_repo as user_repo
-from app.schemas.user_create_schema import UserCreateSchema
-from app.schemas.user_schema import UserSchema
 import app.core.db as db
+import app.repositories.user_repository as user_repo
+from app.exceptions import (
+    EntityAlreadyExistsException,
+    EntityNotFoundException,
+    InvalidFormatException,
+)
+from app.models.user import User
+from app.schemas.user_create_schema import UserCreateSchema
+from app.schemas.user_password_update_schema import UserPasswordUpdateSchema
+from app.schemas.user_schema import UserRole, UserSchema
+from app.schemas.user_update_schema import UserUpdateSchema
+from app.services import password_service
+from app.utils import map_model_to_orm
 
 
-def create(user: UserCreateSchema) -> UserSchema:
-    user = UserCreateSchema.model_validate(user).to_model()
+def create(dto: UserCreateSchema) -> UserSchema:
+    user = User(**dto.model_dump(exclude=["password"]))
+
+    if user.role != UserRole.JUDGE and user.judge_rank is not None:
+        raise InvalidFormatException(
+            'User without role "JUDGE" must not have "judge_rank"'
+        )
+
     with db.create_session() as session:
-        if user_repo.get_by_email(session, user.email) is not None:
+        if user_repo.get_by_email(session, dto.email) is not None:
             raise EntityAlreadyExistsException("User with this email already exists")
-        return UserSchema.from_model(user_repo.save(session, user))
+
+        user.password_salt = password_service.generate_salt()
+        user.password_hash = password_service.encode_password(
+            dto.password, user.password_salt
+        )
+
+        user = user_repo.save(session, user)
+
+        return UserSchema.model_validate(user)
 
 
-def get_all_by_role(role: UserRole) -> list[UserSchema]:
+def get_all(role: UserRole | None) -> list[UserSchema]:
     with db.create_session() as session:
-        users = user_repo.get_all_by_role(session, role)
-        return [UserSchema.from_model(user) for user in users]
+        users = user_repo.get_all(session, role)
+        return list(map(UserSchema.model_validate, users))
 
 
 def get_by_id(user_id: int) -> UserSchema:
@@ -27,7 +47,7 @@ def get_by_id(user_id: int) -> UserSchema:
         user = user_repo.get_by_id(session, user_id)
         if user is None:
             raise EntityNotFoundException("User not found")
-        return UserSchema.from_model(user)
+        return UserSchema.model_validate(user)
 
 
 def get_by_email(email: str) -> UserSchema:
@@ -35,26 +55,52 @@ def get_by_email(email: str) -> UserSchema:
         user = user_repo.get_by_email(session, email)
         if user is None:
             raise EntityNotFoundException("User not found")
-        return UserSchema.from_model(user)
+        return UserSchema.model_validate(user)
 
 
-def update(user_id: int, user: UserSchema) -> UserSchema:
-    UserSchema.model_validate(user)
+def update(user_id: int, dto: UserUpdateSchema) -> UserSchema:
     with db.create_session() as session:
-        db_user = user_repo.get_by_id(session, user_id)
-        if db_user is None:
+        user = user_repo.get_by_id(session, user_id)
+        if user is None:
             raise EntityNotFoundException("User not found")
-        db_user = user_repo.save(session, user.to_model(db_user))
-        return UserSchema.from_model(db_user)
+
+        if dto.judge_rank is not None and user.role != UserRole.JUDGE:
+            raise InvalidFormatException(
+                'User without role "JUDGE" must not have "judge_rank"'
+            )
+
+        if (
+            user.email != dto.email
+            and user_repo.get_by_email(session, dto.email) is not None
+        ):
+            raise EntityAlreadyExistsException("User with this email already exists")
+
+        map_model_to_orm(dto, user)
+        user_repo.save(session, user)
+
+        return UserSchema.model_validate(user)
 
 
-def delete(user_id: int) -> bool:
+def update_password(user_id: int, dto: UserPasswordUpdateSchema) -> None:
+    with db.create_session() as session:
+        user = user_repo.get_by_id(session, user_id)
+        if user is None:
+            raise EntityNotFoundException("User not found")
+
+        user.password_salt = password_service.generate_salt()
+        user.password_hash = password_service.encode_password(
+            dto.new_password, user.password_salt
+        )
+
+        user_repo.save(session, user)
+
+
+def delete(user_id: int) -> None:
     with db.create_session() as session:
         user = user_repo.get_by_id(session, user_id)
         if user is None:
             raise EntityNotFoundException("User not found")
         user_repo.delete(session, user)
-        return True
 
 
 def check_credentials(email: str, password: str) -> bool:
@@ -63,4 +109,6 @@ def check_credentials(email: str, password: str) -> bool:
         if user is None:
             return False
 
-        return user.password_hash == md5(password.encode()).hexdigest()
+        return password_service.compare_passwords(
+            password, user.password_salt, user.password_hash
+        )

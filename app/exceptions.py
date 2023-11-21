@@ -39,3 +39,8 @@ class ForbiddenException(AppException):
 class ValidationException(AppException):
     def __init__(self, details: str):
         super().__init__(HTTPStatus.BAD_REQUEST, details)
+
+
+class InvalidFormatException(AppException):
+    def __init__(self, details: str):
+        super().__init__(HTTPStatus.BAD_REQUEST, details)

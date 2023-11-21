@@ -1,9 +1,10 @@
 from datetime import date
 
+from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
 from app.models.tournament import Tournament
-from pydantic import BaseModel, Field
+
 
 class TournamentUpdateSchema(BaseModel):
     id: Annotated[int, Field(examples=[1])]
@@ -16,6 +17,7 @@ class TournamentUpdateSchema(BaseModel):
     date_award: Annotated[date, Field(examples=["2000-01-01"])]
     state: Annotated[str, Field(max_length=50, examples=["State"])]
 
+
 def to_model(self, tournament: Tournament) -> Tournament:
     return Tournament(
         id=self.id,
@@ -26,5 +28,5 @@ def to_model(self, tournament: Tournament) -> Tournament:
         date_start=self.date_start,
         date_end=self.date_end,
         date_award=self.date_award,
-        state=self
+        state=self,
     )

@@ -1,8 +1,7 @@
 from datetime import date
 
-from typing_extensions import Annotated
-
 from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 from app.models.tournament import Tournament
 
@@ -29,6 +28,5 @@ class TournamentSchema(BaseModel):
             date_start=tournament.date_start,
             date_end=tournament.date_end,
             date_award=tournament.date_award,
-            state=tournament.state
-        )   
-
+            state=tournament.state,
+        )

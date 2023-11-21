@@ -3,14 +3,10 @@ from datetime import date
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
-from app.schemas.user_schema import JudgeRankEnum, UserRole
+from app.schemas.user_schema import JudgeRankEnum
 
 
-class UserCreateSchema(BaseModel):
-    # FIXME: в пароль можно записать не ASCII символы
-    # (возникнет ошибка, если попытаемся закодировать в base64 на фронте
-    # для HTTP авторизации)
-    password: Annotated[str, Field(min_length=8, max_length=50, examples=["password"])]
+class UserUpdateSchema(BaseModel):
     first_name: Annotated[str, Field(max_length=50, examples=["Name"])]
     last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
     patronymic: Annotated[str, Field(max_length=50, examples=["Patronymic"])]
@@ -25,6 +21,4 @@ class UserCreateSchema(BaseModel):
             examples=["address@domain.com"],
         ),
     ]
-    role: UserRole
-
     judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]

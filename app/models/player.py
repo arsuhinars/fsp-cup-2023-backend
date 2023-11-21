@@ -1,7 +1,7 @@
 from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import ForeignKey, String, Integer, Date, Enum
+from sqlalchemy import Date, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -32,4 +32,6 @@ class Player(Base):
     pd_accepted: Mapped[bool] = mapped_column(default=False)
     deleted: Mapped[bool] = mapped_column(default=False)
 
-    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="player")
+    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
+        back_populates="player"
+    )
