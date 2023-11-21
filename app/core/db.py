@@ -1,4 +1,3 @@
-import asyncio
 from contextlib import contextmanager
 
 from sqlalchemy import Engine, create_engine
@@ -11,6 +10,13 @@ class Base(DeclarativeBase):
     ...
 
 
+# from app.models.match import Match  # noqa: F401, E402
+# from app.models.player import Player  # noqa: F401, E402
+# from app.models.team import Team  # noqa: F401, E402
+# from app.models.team_composition import TeamComposition  # noqa: F401, E402
+# from app.models.team_composition_set import TeamCompositionSet  # noqa: F401, E402
+# from app.models.tournament import Tournament  # noqa: F401, E402
+# from app.models.tournament_set import TournamentSet  # noqa: F401, E402
 from app.models.user import User  # noqa: F401, E402
 
 _engine: Engine = None
@@ -22,8 +28,7 @@ def initialize():
 
     _engine = create_engine(settings.db_url)
     _session_factory = scoped_session(
-        sessionmaker(_engine, autoflush=False, expire_on_commit=True),
-        lambda: asyncio.current_task(),
+        sessionmaker(_engine, autoflush=False, expire_on_commit=True)
     )
 
     Base.metadata.create_all(_engine)

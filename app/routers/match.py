@@ -1,40 +1,33 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/match")
+router = APIRouter(tags=["match"])
 
 
-@router.post("/", tags=["match"])
-def post_match(name: str,
-               location: str,
-               discipline: str,
-               date_registration: str,
-               date_start: str,
-               date_end: str,
-               date_award: str,
-               status: str,
-               judge_id: int):
+@router.post("/tournament/{tournament_id}/matches")
+def set_tournament_match(tournament_id: int, match: dict):
     pass
 
 
-@router.get("/", tags=["match"])
+@router.post("/tournament/{tournament_id}/matches/generate-next")
+def set_tournament_match_next(tournament_id: int):
+    pass
+
+
+@router.get("/tournament/{tournament_id}/matches")
+def get_tournament_match(tournament_id: int):
+    pass
+
+
+@router.get("/matches/{match_id}")
 def get_match(match_id: int):
     pass
 
 
-@router.put("/", tags=["match"])
-def update_match(match_id: int,
-                 name: str,
-                 location: str,
-                 discipline: str,
-                 date_registration: str,
-                 date_start: str,
-                 date_end: str,
-                 date_award: str,
-                 status: str,
-                 judge_id: int):
+@router.put("/matches/{match_id}")
+def update_match(match_id: int, match: dict):
     pass
 
 
-@router.delete("/", tags=["match"])
+@router.delete("/matches/{match_id}")
 def delete_match(match_id: int):
     pass

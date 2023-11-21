@@ -1,4 +1,3 @@
-import secrets
 from typing import Annotated
 
 from fastapi import Depends
@@ -6,6 +5,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from app.exceptions import ForbiddenException, UnauthorizedException
 from app.models.user import User, UserRole
+from app.services import user_service
 
 security = HTTPBasic()
 
@@ -13,19 +13,13 @@ security = HTTPBasic()
 def authenticate(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 ) -> User | None:
-    login = credentials.username.encode("utf-8")
-    password = credentials.password.encode("utf-8")
+    email = credentials.username
+    password = credentials.password
 
-    # TODO: поиск логина в БД, хеширование и сравнение с паролем,
-    # возвращение объекта пользователя
-
-    is_login_correct = secrets.compare_digest(login, b"admin")
-    is_password_correct = secrets.compare_digest(password, b"12345678")
-
-    if not (is_login_correct and is_password_correct):
+    if not user_service.check_credentials(email, password):
         raise UnauthorizedException("Invalid credentials were provided")
 
-    return User()
+    return user_service.get_by_email(email)
 
 
 class RequireRoles:
@@ -35,3 +29,8 @@ class RequireRoles:
     def __call__(self, user: Annotated[User, Depends(authenticate)]):
         if user.role not in self.__roles:
             raise ForbiddenException("You don't have enough rights")
+
+
+require_admin = RequireRoles([UserRole.ADMIN])
+require_judge = RequireRoles([UserRole.JUDGE])
+require_team_captain = RequireRoles([UserRole.TEAM_CAPTAIN])
