@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+from app.models.match import Match
 
 
 class TeamComposition(Base):
@@ -11,4 +12,9 @@ class TeamComposition(Base):
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
 
     team: Mapped["Team"] = relationship(back_populates="team_compositions")
-    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="team_compositions")
+    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="team_composition")
+    tournament_sets: Mapped[list["TournamentSet"]] = relationship(back_populates="team_composition")
+    matches: Mapped[list["Match"]] = relationship(
+        primaryjoin="or_(TeamComposition.id == Match.team_composition_a_id, TeamComposition.id == Match.team_composition_b_id)")
+    win_matches: Mapped[list["Match"]] = relationship(
+        primaryjoin="TeamComposition.id == Match.team_composition_winner_id")

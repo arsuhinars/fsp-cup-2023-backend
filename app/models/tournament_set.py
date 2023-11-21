@@ -12,5 +12,5 @@ class TournamentSet(Base):
     order_number: Mapped[int] = mapped_column(Integer)
     result_place: Mapped[int] = mapped_column(Integer)
 
-    tournament: Mapped["Tournament"] = relationship(back_populates="team_composition_sets")
-    team_composition: Mapped["TeamComposition"] = relationship(back_populates="team_composition_sets")
+    tournament: Mapped["Tournament"] = relationship(back_populates="tournament_sets")
+    team_composition: Mapped["TeamComposition"] = relationship(back_populates="tournament_sets")

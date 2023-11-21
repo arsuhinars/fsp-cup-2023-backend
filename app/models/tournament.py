@@ -4,7 +4,6 @@ from sqlalchemy import ForeignKey, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
-from app.models.team_composition_set import TeamCompositionSet
 
 
 class Tournament(Base):
@@ -21,4 +20,4 @@ class Tournament(Base):
     state: Mapped[str] = mapped_column(String(50))
     main_judge_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
-    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(back_populates="tournaments")
+    tournament_sets: Mapped[list["TournamentSet"]] = relationship(back_populates="tournament")
