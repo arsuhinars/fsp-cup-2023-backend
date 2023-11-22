@@ -1,13 +1,11 @@
 from datetime import date
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
 
 class PlayerUpdateSchema(BaseModel):
-    id: Annotated[int, Field()]
-    gto_id: Annotated[int, Field(examples=["11111111111"])]
-    team_id: Annotated[int | None, Field(default=None)]
+    gto_id: int
     nickname: Annotated[str, Field(max_length=50, examples=["Nickname"])]
     first_name: Annotated[str, Field(max_length=50, examples=["Name"])]
     last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
@@ -16,14 +14,8 @@ class PlayerUpdateSchema(BaseModel):
     country: Annotated[str, Field(max_length=50, examples=["Country"])]
     city: Annotated[str, Field(max_length=50, examples=["City"])]
     phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]
-    email: Annotated[
-        str,
-        Field(
-            pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-            examples=["address@domain.com"],
-        ),
-    ]
+    email: EmailStr
     citizenship: Annotated[str, Field(max_length=50, examples=["Citizenship"])]
     rank: Annotated[str, Field(max_length=50, examples=["Rank"])]
-    pd_accepted: Annotated[bool, Field()]
-    deleted: Annotated[bool, Field()]
+    pd_accepted: bool
+    is_active_in_team: bool
