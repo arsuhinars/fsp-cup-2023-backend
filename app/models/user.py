@@ -30,7 +30,7 @@ class User(Base):
 
     judge_rank: Mapped[JudgeRankEnum | None] = mapped_column(Enum(JudgeRankEnum))
 
-    team: Mapped["Team"] = relationship()
+    team: Mapped["Team | None"] = relationship()
     judge_tournaments: Mapped["Tournament"] = relationship()
 
     __table_args__ = (

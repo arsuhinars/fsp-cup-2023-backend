@@ -1,4 +1,5 @@
 from sqlalchemy import ForeignKey, String
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -14,3 +15,9 @@ class Team(Base):
     leader: Mapped["User"] = relationship(back_populates="team")
     players: Mapped[list["Player"]] = relationship()
     team_compositions: Mapped[list["TeamComposition"]] = relationship()
+
+    @hybrid_property
+    def leader_full_name(self):
+        return (
+            f"{self.leader.last_name} {self.leader.first_name} {self.leader.patronymic}"
+        )
