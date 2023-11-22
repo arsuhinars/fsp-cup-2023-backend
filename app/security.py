@@ -29,6 +29,7 @@ class RequireRoles:
     def __call__(self, user: Annotated[User, Depends(authenticate)]):
         if user.role not in self.__roles:
             raise ForbiddenException("You don't have enough rights")
+        return user
 
 
 require_admin = RequireRoles([UserRole.ADMIN])
