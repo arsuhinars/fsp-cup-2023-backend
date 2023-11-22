@@ -34,6 +34,10 @@ class Player(Base):
     deleted: Mapped[bool] = mapped_column(default=False)
 
     team: Mapped["Team"] = relationship(back_populates="players")
-    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
-        back_populates="player"
+    # team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
+    #     back_populates="player"
+    # )
+    team_compositions: Mapped[list["TeamComposition"]] = relationship(
+        secondary="team_composition_set",
+        back_populates="players",
     )

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.schemas.player_create_schema import PlayerCreateSchema
 from app.schemas.player_schema import PlayerSchema
+from app.schemas.player_update_schema import PlayerUpdateSchema
 from app.services import player_service
 
 router = APIRouter(tags=["player"])

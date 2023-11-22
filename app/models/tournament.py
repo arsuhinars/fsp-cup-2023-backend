@@ -20,4 +20,8 @@ class Tournament(Base):
     state: Mapped[str] = mapped_column(String(50))
     main_judge_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
-    tournament_sets: Mapped[list["TournamentSet"]] = relationship()
+    # tournament_sets: Mapped[list["TournamentSet"]] = relationship()
+    team_compositions: Mapped[list["TeamComposition"]] = relationship(
+        secondary="tournament_set",
+        back_populates="tournaments"
+    )
