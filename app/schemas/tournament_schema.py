@@ -1,7 +1,7 @@
 from datetime import date
 from enum import StrEnum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing_extensions import Annotated
 
 
@@ -14,6 +14,8 @@ class TournamentStateEnum(StrEnum):
 
 
 class TournamentSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: Annotated[int, Field(examples=[1])]
     name: Annotated[str, Field(max_length=50, examples=["Team name"])]
     location: Annotated[str, Field(max_length=50, examples=["Location"])]
