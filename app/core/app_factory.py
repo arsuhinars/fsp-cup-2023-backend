@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
         try:
             user_service.create(settings.initial_user_schema)
         except EntityAlreadyExistsException:
-            print("Initial entity already exist. Skipping.")
+            print("Initial user already exist. Skipping.")
 
     yield
 
