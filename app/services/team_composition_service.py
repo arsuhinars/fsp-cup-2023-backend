@@ -5,6 +5,6 @@ from app.schemas.team_composition_schema import TeamCompositionSchema
 
 
 def create(team_id: int) -> int:
-    with db.create_session() as session:  # TODO add to sedo
+    with db.create_session() as session:
         team_comp = team_compo_repo.save(session, TeamComposition(team_id=team_id))
         return team_comp.id

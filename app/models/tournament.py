@@ -22,7 +22,6 @@ class Tournament(Base):
     state: Mapped["TournamentStateEnum"] = mapped_column(Enum(TournamentStateEnum))
 
     main_judge: Mapped["User"] = relationship(back_populates="judge_tournaments")
-    # tournament_sets: Mapped[list["TournamentSet"]] = relationship()
     team_compositions: Mapped[list["TeamComposition"]] = relationship(
         secondary="tournament_set",
         back_populates="tournaments"
