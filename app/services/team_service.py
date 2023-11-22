@@ -1,74 +1,70 @@
 import app.core.db as db
-from app.models.team import Team
 import app.repositories.team_repository as team_repo
-from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+import app.repositories.user_repository as user_repo
+from app.exceptions import (
+    EntityAlreadyExistsException,
+    EntityNotFoundException,
+    ValidationException,
+)
+from app.models.team import Team
 from app.schemas.team_create_schema import TeamCreateSchema
 from app.schemas.team_schema import TeamSchema
 from app.schemas.team_update_schema import TeamUpdateSchema
+from app.schemas.user_schema import UserRole
 from app.utils import map_model_to_orm
 
 
-def get_by_leader_id(leader_id: int) -> TeamSchema:
-    with db.create_session() as session:
-        team = team_repo.get_by_leader_id(session, leader_id)
-        if team is None:
-            raise EntityNotFoundException("Team not found")
-        return TeamSchema.model_validate(team)
-
-
-def create(dto: TeamCreateSchema) -> TeamSchema:
+def create(dto: TeamCreateSchema, leader_id: int) -> TeamSchema:
     team = Team(**dto.model_dump())
     with db.create_session() as session:
-        if team_repo.get_by_name(session, dto.name) is not None:
-            raise EntityAlreadyExistsException("Team with this name already exists")
+        user = user_repo.get_by_id(session, leader_id)
+        if user is None:
+            raise EntityNotFoundException("User was not found")
+
+        if user.role != UserRole.TEAM_CAPTAIN:
+            raise ValidationException("User must be team captain to create new team")
+
+        if user.team is not None:
+            raise EntityAlreadyExistsException("User already has team")
+
+        team.leader_id = user.id
+
         return TeamSchema.model_validate(team_repo.save(session, team))
 
 
 def get_all() -> list[TeamSchema]:
     with db.create_session() as session:
         teams = team_repo.get_all(session)
-        return [TeamSchema.model_validate(team) for team in teams]
+        return list(map(TeamSchema.model_validate, teams))
 
 
 def get_by_id(team_id: int) -> TeamSchema:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
-            raise EntityNotFoundException("Team not found")
+            raise EntityNotFoundException("Team was not found")
         return TeamSchema.model_validate(team)
 
 
-def get_by_name(name: str) -> TeamSchema:
+def get_by_leader_id(leader_id: int) -> TeamSchema:
     with db.create_session() as session:
-        team = team_repo.get_by_name(session, name)
-        if team is None:
-            raise EntityNotFoundException("Team not found")
-        return TeamSchema.model_validate(team)
+        user = user_repo.get_by_id(session, leader_id)
+        if user is None:
+            raise EntityNotFoundException("User was not found")
+
+        if user.team is None:
+            raise EntityNotFoundException("Team was not found")
+
+        return TeamSchema.model_validate(user.team)
 
 
 def update(team_id: int, dto: TeamUpdateSchema) -> TeamSchema:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
-            raise EntityNotFoundException("Team not found")
-        
-        if (
-            team.name != dto.name
-            and team_repo.get_by_name(session, dto.name) is not None
-        ):
-            raise EntityAlreadyExistsException(
-                "Team with this name already exists"
-            )
+            raise EntityNotFoundException("Team was not found")
+
         map_model_to_orm(dto, team)
         team_repo.save(session, team)
 
         return TeamSchema.model_validate(team)
-
-
-def delete(team_id: int) -> bool:
-    with db.create_session() as session:
-        team = team_repo.get_by_id(session, team_id)
-        if team is None:
-            raise EntityNotFoundException("Team not found")
-        team_repo.delete(session, team)
-        return True
