@@ -2,6 +2,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+from app.models.player import Player
+from app.models.team_composition import TeamComposition
 
 
 class TeamCompositionSet(Base):

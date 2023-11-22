@@ -3,6 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
 from app.models.match import Match
+from app.models.team import Team
+from app.models.team_composition_set import TeamCompositionSet
 
 
 class TeamComposition(Base):
