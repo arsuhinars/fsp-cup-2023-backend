@@ -25,7 +25,7 @@ def create(dto: PlayerCreateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player)
     
 
-def create_by_team_id(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
+def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
     player = Player(**dto.model_dump())
     with db.create_session() as session:
         pass
@@ -51,7 +51,7 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player)
     
 
-def delete():
+def delete(player_id: int) -> PlayerSchema:
     pass
     #TODO!!!!!
 

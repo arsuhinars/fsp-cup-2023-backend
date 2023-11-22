@@ -5,6 +5,7 @@ from sqlalchemy import Date, Enum, Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+from app.models.team_composition_set import TeamCompositionSet
 
 
 class GenderEnum(StrEnum):
@@ -35,6 +36,5 @@ class Player(Base):
 
     team: Mapped["Team"] = relationship(back_populates="players")
     team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
-        back_populates="player",
-        secondary="team_composition_set"
+        back_populates="player"
     )
