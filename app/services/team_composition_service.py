@@ -4,9 +4,7 @@ import app.repositories.team_composition_repository as team_compo_repo
 from app.schemas.team_composition_schema import TeamCompositionSchema
 
 
-def create(team_comp: TeamCompositionSchema) -> int:
-    with db.create_session as session:
-        print('tc.id >>', team_comp.id)
-        team_comp = team_compo_repo.save(session, TeamComposition(**team_comp.model_dump()))
-        print('tc.id >>', team_comp.id)
+def create(team_id: int) -> int:
+    with db.create_session() as session:  # TODO add to sedo
+        team_comp = team_compo_repo.save(session, TeamComposition(team_id=team_id))
         return team_comp.id

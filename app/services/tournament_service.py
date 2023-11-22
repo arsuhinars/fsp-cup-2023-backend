@@ -29,9 +29,9 @@ def set_team_comps(tournament_id: int, team_comp_ids: list[int]) -> list[int]:
             map(lambda ts: ts.id,
                 tournament_set_repo.save_all(
                     session,
-                    map(lambda order, team_comp_id: TournamentSet(tournament_id=tournament_id,
-                                                                  team_composition_id=team_comp_id,
-                                                                  order_number=order
+                    map(lambda order_n_team_comp_id: TournamentSet(tournament_id=tournament_id,
+                                                                  team_composition_id=order_n_team_comp_id[1],
+                                                                  order_number=order_n_team_comp_id[0]
                                                                   ),
                         enumerate(team_comp_ids)))))
 
