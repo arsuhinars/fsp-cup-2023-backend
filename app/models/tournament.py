@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, String, Date, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+from app.schemas.tournament_schema import TournamentStateEnum
 
 
 class Tournament(Base):
