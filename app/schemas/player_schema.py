@@ -1,11 +1,13 @@
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
+
 class PlayerSchema(BaseModel):
-    id: int
-    gto_id: int
+    id: Annotated[int, Field()]
+    gto_id: Annotated[int, Field(examples=["11111111111"])]
+    team_id: Annotated[int | None, Field(default=None)]
     nickname: Annotated[str, Field(max_length=50, examples=["Nickname"])]
     first_name: Annotated[str, Field(max_length=50, examples=["Name"])]
     last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
