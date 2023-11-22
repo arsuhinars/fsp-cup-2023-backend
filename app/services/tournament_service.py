@@ -22,16 +22,16 @@ def create(dto: TournamentCreateSchema) -> TournamentSchema:
 
 
 def set_team_comps(tournament_id: int, team_comp_ids: list[int]) -> list[int]:
-    if len(team_comp_ids) != 32:
-        raise InvalidFormatException("Invalid number of teams")
+    # if len(team_comp_ids) != 32:
+    #     raise InvalidFormatException("Invalid number of teams")
     with db.create_session() as session:
         return list(
             map(lambda ts: ts.id,
                 tournament_set_repo.save_all(
                     session,
-                    map(lambda order, team_comp_id: TournamentSet(tournament_id=tournament_id,
-                                                                  team_composition_id=team_comp_id,
-                                                                  order_number=order
+                    map(lambda order_n_team_comp_id: TournamentSet(tournament_id=tournament_id,
+                                                                  team_composition_id=order_n_team_comp_id[1],
+                                                                  order_number=order_n_team_comp_id[0]
                                                                   ),
                         enumerate(team_comp_ids)))))
 
@@ -58,11 +58,12 @@ def get_by_name(name: str) -> TournamentSchema:
         return TournamentSchema.model_validate(tournament)
 
 
-# TODO add m2m relationship to Tournament
-
-
 def get_team_comps(tournament_id: int) -> list[TeamComposition]:
-    pass
+    with db.create_session() as session:
+        tournament = tournament_repo.get_by_id(session, tournament_id)
+        if tournament is None:
+            raise EntityNotFoundException("Tournament not found")
+        return tournament.team_compositions
 
 
 def update(tournament_id: int, dto: TournamentUpdateSchema) -> TournamentSchema:

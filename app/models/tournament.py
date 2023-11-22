@@ -19,7 +19,10 @@ class Tournament(Base):
     date_end: Mapped[date] = mapped_column(Date)
     date_awards: Mapped[date] = mapped_column(Date)
     main_judge_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    state: Mapped[TournamentStateEnum] = mapped_column(Enum(TournamentStateEnum))
+    state: Mapped["TournamentStateEnum"] = mapped_column(Enum(TournamentStateEnum))
 
-    tournament_sets: Mapped[list["TournamentSet"]] = relationship()
     main_judge: Mapped["User"] = relationship(back_populates="judge_tournaments")
+    team_compositions: Mapped[list["TeamComposition"]] = relationship(
+        secondary="tournament_set",
+        back_populates="tournaments"
+    )
