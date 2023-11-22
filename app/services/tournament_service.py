@@ -22,8 +22,8 @@ def create(dto: TournamentCreateSchema) -> TournamentSchema:
 
 
 def set_team_comps(tournament_id: int, team_comp_ids: list[int]) -> list[int]:
-    if len(team_comp_ids) != 32:
-        raise InvalidFormatException("Invalid number of teams")
+    # if len(team_comp_ids) != 32:
+    #     raise InvalidFormatException("Invalid number of teams")
     with db.create_session() as session:
         return list(
             map(lambda ts: ts.id,
