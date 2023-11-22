@@ -1,13 +1,19 @@
 from datetime import date
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing_extensions import Annotated
 
 
+class GenderEnum(StrEnum):
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+
+
 class PlayerSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[int, Field()]
+    id: int
     gto_id: Annotated[int, Field(examples=["11111111111"])]
     team_id: Annotated[int | None, Field(default=None)]
     nickname: Annotated[str, Field(max_length=50, examples=["Nickname"])]
@@ -15,6 +21,7 @@ class PlayerSchema(BaseModel):
     last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
     patronymic: Annotated[str, Field(max_length=50, examples=["Patronymic"])]
     birth_date: Annotated[date, Field(examples=["2000-01-01"])]
+    gender: GenderEnum
     country: Annotated[str, Field(max_length=50, examples=["Country"])]
     city: Annotated[str, Field(max_length=50, examples=["City"])]
     phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]

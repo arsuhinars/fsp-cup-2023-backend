@@ -25,7 +25,6 @@ class TeamComposition(Base):
         secondary="tournament_set",
         back_populates="team_compositions",
     )
-    players: Mapped[list["Player"]] = relationship(
-        secondary="team_composition_set",
-        back_populates="team_compositions"
+    players: Mapped[set["Player"]] = relationship(
+        secondary="team_composition_set", back_populates="team_compositions"
     )

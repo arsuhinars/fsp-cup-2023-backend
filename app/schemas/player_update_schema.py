@@ -3,6 +3,8 @@ from datetime import date
 from pydantic import BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
+from app.schemas.player_schema import GenderEnum
+
 
 class PlayerUpdateSchema(BaseModel):
     gto_id: int
@@ -11,6 +13,7 @@ class PlayerUpdateSchema(BaseModel):
     last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
     patronymic: Annotated[str, Field(max_length=50, examples=["Patronymic"])]
     birth_date: Annotated[date, Field(examples=["2000-01-01"])]
+    gender: GenderEnum
     country: Annotated[str, Field(max_length=50, examples=["Country"])]
     city: Annotated[str, Field(max_length=50, examples=["City"])]
     phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]

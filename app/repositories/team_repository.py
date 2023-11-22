@@ -13,14 +13,12 @@ def get_by_id(session: Session, team_id: int) -> Team | None:
     return session.get(Team, team_id)
 
 
-def has_active_composition(session: Session, team_id: int) -> bool:
-    q = (
-        select(TeamComposition)
-        .where(TeamComposition.team_id == team_id and TeamComposition.is_active)
-        .exists()
+def get_active_composition(session: Session, team: Team) -> TeamComposition | None:
+    q = select(TeamComposition).where(
+        TeamComposition.is_active and TeamComposition.team_id == team.id
     )
 
-    return session.execute(select(q)).scalar_one()
+    return session.execute(q).scalar_one_or_none()
 
 
 def save(session: Session, team: Team) -> Team:
