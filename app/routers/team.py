@@ -1,28 +1,48 @@
-from fastapi import APIRouter
+from typing import Annotated
 
-router = APIRouter(prefix="/teams", tags=["team"])
+from fastapi import APIRouter, Depends
+
+from app.exceptions import EntityNotFoundException
+from app.schemas.team_create_schema import TeamCreateSchema
+from app.schemas.team_schema import TeamSchema
+from app.schemas.team_update_schema import TeamUpdateSchema
+from app.schemas.user_schema import UserSchema
+from app.security import authenticate, require_team_captain
+from app.services import team_service
+
+router = APIRouter(prefix="/teams", tags=["Team"])
 
 
-@router.post("/")
-def create_team(name: str):
-    pass
+@router.post("/my", response_model=TeamSchema)
+def create_my_team(
+    team: TeamCreateSchema, user: Annotated[UserSchema, Depends(require_team_captain)]
+) -> TeamSchema:
+    return team_service.create(team, user.id)
 
 
-@router.get("/")
+@router.get("/", response_model=list[TeamSchema], dependencies=[Depends(authenticate)])
 def get_all_teams():
-    pass
+    return team_service.get_all()
 
 
-@router.get("/my")
-def get_my_teams():
-    pass
+@router.get("/my", response_model=TeamSchema)
+def get_my_team(user: Annotated[UserSchema, Depends(require_team_captain)]):
+    return team_service.get_by_leader_id(user.id)
 
 
-@router.put("/{team_id}")
-def update_team(team_id: int, team: dict):
-    pass
+@router.get(
+    "/{team_id}", response_model=TeamSchema, dependencies=[Depends(authenticate)]
+)
+def get_team_by_id(team_id: int):
+    return team_service.get_by_id(team_id)
 
 
-@router.delete("/{team_id}")
-def delete_team(team_id: int):
-    pass
+@router.put("/my", response_model=TeamSchema)
+def update_my_team(
+    schema: TeamUpdateSchema, user: Annotated[UserSchema, Depends(require_team_captain)]
+):
+    team = team_service.get_by_leader_id(user.id)
+    if team is None:
+        raise EntityNotFoundException("Team was not found")
+
+    return team_service.update(team.id, schema)

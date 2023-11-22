@@ -1,80 +1,94 @@
 import app.core.db as db
-from app.models.player import Player
 import app.repositories.player_repository as player_repo
-from app.exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from app.schemas.player_schema import PlayerSchema
+import app.repositories.team_repository as team_repo
+from app.exceptions import EntityNotFoundException
+from app.models.player import Player
+from app.models.team_composition import TeamComposition
 from app.schemas.player_create_schema import PlayerCreateSchema
+from app.schemas.player_schema import PlayerSchema
 from app.schemas.player_update_schema import PlayerUpdateSchema
 from app.utils import map_model_to_orm
 
 
-def create(dto: PlayerCreateSchema) -> PlayerSchema:
+def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
     player = Player(**dto.model_dump())
     with db.create_session() as session:
-        if player_repo.get_by_gto(session, dto.gto_id) is not None:
-            raise EntityAlreadyExistsException(
-                "Player with this gto_id already exists"
-                )
-        if player_repo.get_by_nickname(session, dto.nickname) is not None:
-            raise EntityAlreadyExistsException(
-                "Player with this nickname already exists"
-                )
+        team = team_repo.get_by_id(session, team_id)
+        if team is None:
+            raise EntityNotFoundException("Team was not found")
+
+        player.team = team
         player = player_repo.save(session, player)
-        return PlayerSchema.model_validate(player)
-    
 
-def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
+        session.refresh(player)
+
+        return PlayerSchema.model_validate(player.as_dict())
+
+
+def get_all_in_team(team_id: int) -> list[PlayerSchema]:
     with db.create_session() as session:
-        player = player_repo.get_by_id(session, player_id)
-        if player in None:
-            raise EntityNotFoundException(
-                "Player not found"
-            )
-        if (
-            player.nickname != dto.nickname
-            and player_repo.get_by_nickname(session, dto.nickname) is not None
-        ):
-            raise EntityAlreadyExistsException(
-                "Player with this nickname already exists"
-            )
-        map_model_to_orm(dto, player)
-        player_repo.save(session, player)
+        team = team_repo.get_by_id(session, team_id)
+        if team is None:
+            raise EntityNotFoundException("Team was not found")
 
-        return PlayerSchema.model_validate(player)
-    
+        active_composition = team_repo.get_active_composition(session, team)
+        players = map(
+            lambda p: p.as_dict(active_composition),
+            player_repo.get_by_team_id(session, team_id),
+        )
 
-def delete():
-    pass
-    #TODO!!!!!
-
-def get_all() -> list[PlayerSchema]:
-    with db.create_session() as session:
-        players = player_repo.get_all(session)
         return list(map(PlayerSchema.model_validate, players))
-    
+
+
 def get_by_id(player_id: int) -> PlayerSchema:
     with db.create_session() as session:
         player = player_repo.get_by_id(session, player_id)
         if player is None:
-            raise EntityNotFoundException("Player not found")
-        return PlayerSchema.model_validate(player)
-    
+            raise EntityNotFoundException("Player was not found")
 
-def get_by_nickname(nickname: str) -> PlayerSchema:
+        active_composition = team_repo.get_active_composition(session, player.team)
+
+        return PlayerSchema.model_validate(player.as_dict(active_composition))
+
+
+def is_in_team(player_id: int, team_id: int) -> bool:
     with db.create_session() as session:
-        player = player_repo.get_by_nickname(session, nickname)
+        player = player_repo.get_by_id(session, player_id)
         if player is None:
-            raise EntityNotFoundException(
-                "Player with this nickname is not found"
-                )
-        return PlayerSchema.model_validate(player)
+            raise EntityNotFoundException("Player was not found")
+
+        return player.team_id == team_id
 
 
-def get_by_gto(gto_id: int) -> PlayerSchema:
+def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
     with db.create_session() as session:
-        player = player_repo.get_by_gto(session, gto_id)
-        if player is None:
-            raise EntityNotFoundException(
-                "Player with this gto id is not found"
-                )
-        return PlayerSchema.model_validate(player)
+        player = player_repo.get_by_id(session, player_id)
+        if player is None or player.deleted:
+            raise EntityNotFoundException("Player was not found")
+
+        active_composition = team_repo.get_active_composition(session, player.team)
+        is_active_in_team = player.is_active_in_composition(active_composition)
+
+        if dto.is_active_in_team and not is_active_in_team:
+            if active_composition is None:
+                active_composition = TeamComposition(team_id=player.team_id)
+                session.add(active_composition)
+
+            active_composition.players.add(player)
+        elif not dto.is_active_in_team and is_active_in_team:
+            active_composition.players.remove(player)
+
+        map_model_to_orm(dto, player)
+        player = player_repo.save(session, player)
+
+        session.refresh(player)
+
+        return PlayerSchema.model_validate(player.as_dict(active_composition))
+
+
+def delete(player_id: int) -> PlayerSchema:
+    with db.create_session() as session:
+        player = player_repo.get_by_id(session, player_id)
+        if player is None or player.deleted:
+            raise EntityNotFoundException("Player was not found")
+        player_repo.soft_delete(session, player)

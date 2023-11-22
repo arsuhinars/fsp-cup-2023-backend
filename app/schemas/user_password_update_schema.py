@@ -1,9 +1,7 @@
-from typing import Annotated
+from pydantic import BaseModel
 
-from pydantic import BaseModel, Field
+from app.schemas.user_create_schema import PasswordField
 
 
 class UserPasswordUpdateSchema(BaseModel):
-    new_password: Annotated[
-        str, Field(min_length=8, max_length=50, examples=["password"])
-    ]
+    new_password: PasswordField

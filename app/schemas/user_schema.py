@@ -1,7 +1,7 @@
 from datetime import date
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing_extensions import Annotated
 
 
@@ -28,12 +28,6 @@ class UserSchema(BaseModel):
     country: Annotated[str, Field(max_length=50, examples=["Country"])]
     city: Annotated[str, Field(max_length=50, examples=["City"])]
     phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]
-    email: Annotated[
-        str,
-        Field(
-            pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-            examples=["address@domain.com"],
-        ),
-    ]
+    email: EmailStr
     role: UserRole
     judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]
