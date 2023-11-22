@@ -32,7 +32,7 @@ def get_all() -> list[TeamSchema]:
 
 def get_by_id(team_id: int) -> TeamSchema:
     with db.create_session() as session:
-        team = team_repo.get_by_id(session, id)
+        team = team_repo.get_by_id(session, team_id)
         if team is None:
             raise EntityNotFoundException("Team not found")
         return TeamSchema.model_validate(team)
