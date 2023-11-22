@@ -68,7 +68,7 @@ def get_all_in_team(team_id: int) -> list[PlayerSchema]:
             raise EntityNotFoundException(
                 "Team not found"
             )
-        return [PlayerSchema.model_validate(player) for player in team]
+        return 
 
     
 def get_by_id(player_id: int) -> PlayerSchema:
