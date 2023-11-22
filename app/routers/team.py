@@ -1,11 +1,14 @@
 from fastapi import APIRouter
 
+from app.schemas.team_create_schema import TeamCreateSchema
+from app.services import team_service
+
 router = APIRouter(prefix="/teams", tags=["team"])
 
 
 @router.post("/")
-def create_team(name: str):
-    pass
+def create_team(team: TeamCreateSchema):
+    return team_service.create(team)
 
 
 @router.get("/")
