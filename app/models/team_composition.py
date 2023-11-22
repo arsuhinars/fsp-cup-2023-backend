@@ -2,7 +2,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+<<<<<<< HEAD
 from app.models.match import Match
+=======
+>>>>>>> ab5bc7d8192846aebf1a6f67e79e14e65ed9dfb3
 
 
 class TeamComposition(Base):
@@ -10,6 +13,7 @@ class TeamComposition(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
+<<<<<<< HEAD
 <<<<<<<<< Temporary merge branch 1
 
     team: Mapped["Team"] = relationship(back_populates="team_compositions")
@@ -25,5 +29,19 @@ class TeamComposition(Base):
     team: Mapped["Team"] = relationship()
     team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
         back_populates="team_composition"
+=======
+    is_active: Mapped[bool] = mapped_column(default=True)
+
+    team: Mapped["Team"] = relationship(back_populates="team_compositions")
+    team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship()
+    tournament_sets: Mapped[list["TournamentSet"]] = relationship()
+    matches_a: Mapped[list["Match"]] = relationship(
+        foreign_keys="Match.team_composition_a_id"
     )
->>>>>>>>> Temporary merge branch 2
+    matches_b: Mapped[list["Match"]] = relationship(
+        foreign_keys="Match.team_composition_b_id"
+    )
+    win_matches: Mapped[list["Match"]] = relationship(
+        foreign_keys="Match.team_composition_winner_id"
+>>>>>>> ab5bc7d8192846aebf1a6f67e79e14e65ed9dfb3
+    )

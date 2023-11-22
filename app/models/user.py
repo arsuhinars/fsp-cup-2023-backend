@@ -30,7 +30,8 @@ class User(Base):
 
     judge_rank: Mapped[JudgeRankEnum | None] = mapped_column(Enum(JudgeRankEnum))
 
-    # team: Mapped["Team"] = relationship(back_populates="leader")
+    team: Mapped["Team"] = relationship()
+    judge_tournaments: Mapped["Tournament"] = relationship()
 
     __table_args__ = (
         UniqueConstraint("email"),

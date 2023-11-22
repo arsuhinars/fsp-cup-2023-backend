@@ -1,11 +1,10 @@
 from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import Date, Enum, Integer, String, ForeignKey
+from sqlalchemy import Date, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
-from app.models.team_composition_set import TeamCompositionSet
 
 
 class GenderEnum(StrEnum):
