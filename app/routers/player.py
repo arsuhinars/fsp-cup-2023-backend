@@ -5,7 +5,7 @@ from app.schemas.player_schema import PlayerSchema
 from app.schemas.player_update_schema import PlayerUpdateSchema
 from app.services import player_service
 
-router = APIRouter(tags=["player"])
+router = APIRouter(tags=["Player"])
 
 
 @router.post("/teams/{team_id}/players")

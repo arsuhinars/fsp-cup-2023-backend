@@ -6,7 +6,7 @@ from app.schemas.tournament_schema import TournamentSchema
 from app.schemas.tournament_update_schema import TournamentUpdateSchema
 from app.services import tournament_service
 
-router = APIRouter(prefix="/tournaments", tags=["tournament"])
+router = APIRouter(prefix="/tournaments", tags=["Tournament"])
 
 
 @router.post("/")
@@ -31,13 +31,18 @@ def get_tournament(tournament_id: int):
 
 @router.get("/{tournament_id}/set")
 def get_tournament_team_comps(tournament_id: int) -> list[TeamCompositionSchema]:
-    return list(map(
-        lambda team_comp: TeamCompositionSchema.model_validate(team_comp),
-        tournament_service.get_team_comps(tournament_id)))
+    return list(
+        map(
+            lambda team_comp: TeamCompositionSchema.model_validate(team_comp),
+            tournament_service.get_team_comps(tournament_id),
+        )
+    )
 
 
 @router.put("/{tournament_id}")
-def update_tournament(tournament_id: int, tournament: TournamentUpdateSchema) -> TournamentSchema:
+def update_tournament(
+    tournament_id: int, tournament: TournamentUpdateSchema
+) -> TournamentSchema:
     return tournament_service.update(tournament_id, tournament)
 
 

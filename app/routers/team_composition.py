@@ -1,11 +1,10 @@
-from app.models.team_composition import TeamComposition
 from fastapi import APIRouter
 
+from app.models.team_composition import TeamComposition
 from app.schemas.team_composition_schema import TeamCompositionSchema
 from app.services import team_composition_service
 
-
-router = APIRouter(tags=["team_composition"])
+router = APIRouter(tags=["Team composition"])
 
 
 @router.get("teams/composition/{team_composition_id}/players")

@@ -10,7 +10,7 @@ from app.schemas.user_schema import UserSchema
 from app.schemas.user_update_schema import UserUpdateSchema
 from app.security import authenticate, require_admin
 
-router = APIRouter(prefix="/users", tags=["user"])
+router = APIRouter(prefix="/users", tags=["User"])
 
 
 @router.post("/", response_model=UserSchema, dependencies=[Depends(require_admin)])

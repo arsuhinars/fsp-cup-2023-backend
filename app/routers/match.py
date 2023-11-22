@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router = APIRouter(tags=["match"])
+router = APIRouter(tags=["Match"])
 
 
 @router.post("/tournament/{tournament_id}/matches")

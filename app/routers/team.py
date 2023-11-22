@@ -10,7 +10,7 @@ from app.schemas.team_update_schema import TeamUpdateSchema
 from app.security import authenticate, require_team_captain
 from app.services import team_service
 
-router = APIRouter(prefix="/teams", tags=["team"])
+router = APIRouter(prefix="/teams", tags=["Team"])
 
 
 @router.post("/my", response_model=TeamSchema)
