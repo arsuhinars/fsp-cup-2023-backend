@@ -58,11 +58,12 @@ def get_by_name(name: str) -> TournamentSchema:
         return TournamentSchema.model_validate(tournament)
 
 
-# TODO add m2m relationship to Tournament
-
-
 def get_team_comps(tournament_id: int) -> list[TeamComposition]:
-    pass
+    with db.create_session() as session:
+        tournament = tournament_repo.get_by_id(session, tournament_id)
+        if tournament is None:
+            raise EntityNotFoundException("Tournament not found")
+        return tournament.team_compositions
 
 
 def update(tournament_id: int, dto: TournamentUpdateSchema) -> TournamentSchema:
