@@ -1,7 +1,7 @@
 from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import Date, Enum, Integer, String
+from sqlalchemy import Date, Enum, Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -18,6 +18,7 @@ class Player(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     gto_id: Mapped[int] = mapped_column(Integer, unique=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
     nickname: Mapped[str] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))
@@ -33,6 +34,7 @@ class Player(Base):
     pd_accepted: Mapped[bool] = mapped_column(default=False)
     deleted: Mapped[bool] = mapped_column(default=False)
 
+    team: Mapped["Team"] = relationship(back_populates="players")
     team_composition_sets: Mapped[list["TeamCompositionSet"]] = relationship(
         back_populates="player"
     )

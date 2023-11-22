@@ -42,16 +42,16 @@ def update_current_user_password(
     return user_service.update_password(user.id, user_schema)
 
 
-@router.get("/{id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
-def get_user_by_id(id: int):
-    return user_service.get_by_id(id)
+@router.get("/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
+def get_user_by_id(user_id: int):
+    return user_service.get_by_id(user_id)
 
 
-@router.put("/{id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
-def update_user_by_id(id: int, user: UserUpdateSchema):
-    return user_service.update(id, user)
+@router.put("/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
+def update_user_by_id(user_id: int, user: UserUpdateSchema):
+    return user_service.update(user_id, user)
 
 
-@router.delete("/{id}", dependencies=[Depends(require_admin)])
-def delete_user(id: int):
-    return user_service.delete(id)
+@router.delete("/{user_id}", dependencies=[Depends(require_admin)])
+def delete_user(user_id: int):
+    return user_service.delete(user_id)

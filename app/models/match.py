@@ -12,9 +12,6 @@ class Match(Base):
     team_composition_b_id: Mapped[int] = mapped_column(ForeignKey("team_composition.id"))
     team_composition_winner_id: Mapped[int] = mapped_column(ForeignKey("team_composition.id"))
 
-    team_composition_a: Mapped[list["TeamComposition"]] = relationship(
-        primaryjoin="Match.team_composition_a_id == TeamComposition.id")
-    team_composition_b: Mapped[list["TeamComposition"]] = relationship(
-        primaryjoin="Match.team_composition_b_id == TeamComposition.id")
-    team_composition_winner: Mapped["TeamComposition"] = relationship(
-        primaryjoin="Match.team_composition_winner_id == TeamComposition.id")
+    team_composition_a: Mapped[list["TeamComposition"]] = relationship(foreign_keys=["TeamComposition.id"])
+    team_composition_b: Mapped[list["TeamComposition"]] = relationship(foreign_keys=["TeamComposition.id"])
+    team_composition_winner: Mapped["TeamComposition"] = relationship(foreign_keys=["TeamComposition.id"])
