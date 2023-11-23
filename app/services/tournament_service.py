@@ -11,9 +11,11 @@ from app.schemas.tournament_schema import (
 from app.utils import map_model_to_orm
 
 
-def create(dto: TournamentCreateSchema) -> TournamentSchema:
+def create(dto: TournamentCreateSchema, main_judge_id: int) -> TournamentSchema:
     tournament = Tournament(**dto.model_dump())
     with db.create_session() as session:
+        # TODO
+
         return TournamentSchema.model_validate(
             tournament_repo.save(session, tournament)
         )
