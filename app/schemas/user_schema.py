@@ -17,17 +17,60 @@ class UserRole(StrEnum):
     TEAM_CAPTAIN = "TEAM_CAPTAIN"
 
 
+PasswordField = Annotated[
+    str,
+    Field(
+        min_length=8,
+        max_length=50,
+        pattern=r"[a-zA-Z0-9!()?{}_`~;:@#$%^&+=\-.]*",
+        examples=["password"],
+    ),
+]
+
+
 class UserSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    first_name: Annotated[str, Field(max_length=50, examples=["Name"])]
-    last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
-    patronymic: Annotated[str, Field(max_length=50, examples=["Patronymic"])]
-    birth_date: Annotated[date, Field(examples=["2000-01-01"])]
-    country: Annotated[str, Field(max_length=50, examples=["Country"])]
-    city: Annotated[str, Field(max_length=50, examples=["City"])]
-    phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
     email: EmailStr
     role: UserRole
-    judge_rank: Annotated[JudgeRankEnum | None, Field(default=None)]
+    judge_rank: JudgeRankEnum | None = None
+
+
+class UserCreateSchema(BaseModel):
+    password: PasswordField
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
+    email: EmailStr
+    role: UserRole
+
+    judge_rank: JudgeRankEnum | None = None
+
+
+class UserUpdateSchema(BaseModel):
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
+    email: EmailStr
+
+    judge_rank: JudgeRankEnum | None = None
+
+
+class UserPasswordUpdateSchema(BaseModel):
+    new_password: PasswordField

@@ -1,12 +1,14 @@
-import app.core.db as db
 import app.repositories.player_repository as player_repo
 import app.repositories.team_repository as team_repo
+from app.core import db
 from app.exceptions import EntityNotFoundException
 from app.models.player import Player
 from app.models.team_composition import TeamComposition
-from app.schemas.player_create_schema import PlayerCreateSchema
-from app.schemas.player_schema import PlayerSchema
-from app.schemas.player_update_schema import PlayerUpdateSchema
+from app.schemas.player_schema import (
+    PlayerCreateSchema,
+    PlayerSchema,
+    PlayerUpdateSchema,
+)
 from app.utils import map_model_to_orm
 
 
@@ -22,7 +24,7 @@ def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
 
         session.refresh(player)
 
-        return PlayerSchema.model_validate(player.as_dict())
+        return PlayerSchema.model_validate(player.convert_to_dict())
 
 
 def get_all_in_team(team_id: int) -> list[PlayerSchema]:
@@ -33,8 +35,8 @@ def get_all_in_team(team_id: int) -> list[PlayerSchema]:
 
         active_composition = team_repo.get_active_composition(session, team)
         players = map(
-            lambda p: p.as_dict(active_composition),
-            player_repo.get_by_team_id(session, team_id),
+            lambda p: p.convert_to_dict(active_composition),
+            team.players,
         )
 
         return list(map(PlayerSchema.model_validate, players))
@@ -48,7 +50,7 @@ def get_by_id(player_id: int) -> PlayerSchema:
 
         active_composition = team_repo.get_active_composition(session, player.team)
 
-        return PlayerSchema.model_validate(player.as_dict(active_composition))
+        return PlayerSchema.model_validate(player.convert_to_dict(active_composition))
 
 
 def is_in_team(player_id: int, team_id: int) -> bool:
@@ -83,7 +85,7 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
 
         session.refresh(player)
 
-        return PlayerSchema.model_validate(player.as_dict(active_composition))
+        return PlayerSchema.model_validate(player.convert_to_dict(active_composition))
 
 
 def delete(player_id: int) -> PlayerSchema:

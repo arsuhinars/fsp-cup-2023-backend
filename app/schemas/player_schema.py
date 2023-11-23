@@ -14,19 +14,54 @@ class PlayerSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    gto_id: Annotated[int, Field(examples=["11111111111"])]
-    team_id: Annotated[int | None, Field(default=None)]
-    nickname: Annotated[str, Field(max_length=50, examples=["Nickname"])]
-    first_name: Annotated[str, Field(max_length=50, examples=["Name"])]
-    last_name: Annotated[str, Field(max_length=50, examples=["Lastname"])]
-    patronymic: Annotated[str, Field(max_length=50, examples=["Patronymic"])]
-    birth_date: Annotated[date, Field(examples=["2000-01-01"])]
+    gto_id: str
+    team_id: int | None = None
+    nickname: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
     gender: GenderEnum
-    country: Annotated[str, Field(max_length=50, examples=["Country"])]
-    city: Annotated[str, Field(max_length=50, examples=["City"])]
-    phone: Annotated[str, Field(max_length=50, examples=["+7(999)999-99-99"])]
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
     email: EmailStr
-    citizenship: Annotated[str, Field(max_length=50, examples=["Citizenship"])]
-    rank: Annotated[str, Field(max_length=50, examples=["Rank"])]
+    citizenship: Annotated[str, Field(max_length=50)]
+    rank: Annotated[str, Field(max_length=50)]
+    pd_accepted: bool
+    is_active_in_team: bool
+
+
+class PlayerCreateSchema(BaseModel):
+    gto_id: str
+    nickname: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
+    gender: GenderEnum
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
+    email: EmailStr
+    citizenship: Annotated[str, Field(max_length=50)]
+    rank: Annotated[str, Field(max_length=50)]
+    pd_accepted: bool
+
+
+class PlayerUpdateSchema(BaseModel):
+    gto_id: str
+    nickname: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    birth_date: date
+    gender: GenderEnum
+    country: Annotated[str, Field(max_length=50)]
+    city: Annotated[str, Field(max_length=50)]
+    phone: Annotated[str, Field(max_length=50)]
+    email: EmailStr
+    citizenship: Annotated[str, Field(max_length=50)]
+    rank: Annotated[str, Field(max_length=50)]
     pd_accepted: bool
     is_active_in_team: bool

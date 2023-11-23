@@ -10,7 +10,6 @@ from app.routers.match import router as match_router
 from app.routers.player import router as player_router
 from app.routers.status import router as status_router
 from app.routers.team import router as team_router
-from app.routers.team_composition import router as team_composition_router
 from app.routers.tournament import router as tournament_router
 from app.routers.user import router as user_router
 from app.services import user_service
@@ -40,7 +39,6 @@ def create_app():
     app.include_router(match_router)
     app.include_router(tournament_router)
     app.include_router(team_router)
-    app.include_router(team_composition_router)
 
     app.add_middleware(
         CORSMiddleware,

@@ -3,9 +3,11 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.exceptions import EntityNotFoundException, ForbiddenException
-from app.schemas.player_create_schema import PlayerCreateSchema
-from app.schemas.player_schema import PlayerSchema
-from app.schemas.player_update_schema import PlayerUpdateSchema
+from app.schemas.player_schema import (
+    PlayerCreateSchema,
+    PlayerSchema,
+    PlayerUpdateSchema,
+)
 from app.schemas.user_schema import UserSchema
 from app.security import authenticate, require_team_captain
 from app.services import player_service, team_service

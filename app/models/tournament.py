@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import ForeignKey, String, Date, Enum
+from sqlalchemy import Date, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -19,10 +19,11 @@ class Tournament(Base):
     date_end: Mapped[date] = mapped_column(Date)
     date_awards: Mapped[date] = mapped_column(Date)
     main_judge_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    state: Mapped["TournamentStateEnum"] = mapped_column(Enum(TournamentStateEnum))
+    state: Mapped["TournamentStateEnum"] = mapped_column(
+        Enum(TournamentStateEnum), default=TournamentStateEnum.JUST_CREATED
+    )
 
     main_judge: Mapped["User"] = relationship(back_populates="judge_tournaments")
     team_compositions: Mapped[list["TeamComposition"]] = relationship(
-        secondary="tournament_set",
-        back_populates="tournaments"
+        secondary="tournament_set", back_populates="tournaments"
     )

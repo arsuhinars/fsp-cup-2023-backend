@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from app.schemas.user_create_schema import UserCreateSchema
+from app.schemas.user_schema import UserCreateSchema
 
 
 class AppSettings(BaseSettings):
