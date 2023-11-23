@@ -11,7 +11,7 @@ import user_service
 global_vars = {}
 
 def init() -> bool:
-    global_vars["captain1"] = user_service.create(UserSchema(
+    global_vars["captain1"] = user_service.create(UserCreateSchema(
         first_name="Name1",
         last_name="Lastname1",
         patronymic="Patronymic1",
@@ -24,7 +24,7 @@ def init() -> bool:
         role="Captain",
     ))
 
-    global_vars["admin"] = user_service.create(UserSchema(
+    global_vars["admin"] = user_service.create(UserCreateSchema(
         first_name="Name2",
         last_name="Lastname2",
         patronymic="Patronymic2",
@@ -37,7 +37,7 @@ def init() -> bool:
         role="Admin",
     ))
 
-    global_vars["judge"] = user_service.create(UserSchema(
+    global_vars["judge"] = user_service.create(UserCreateSchema(
         first_name="Name3",
         last_name="Lastname3",
         patronymic="Patronymic3",
@@ -50,7 +50,7 @@ def init() -> bool:
         role="Judge",
     ))
 
-    global_vars["captain2"] = user_service.create(UserSchema(
+    global_vars["captain2"] = user_service.create(UserCreateSchema(
         first_name="Name4",
         last_name="Lastname4",
         patronymic="Patronymic4",
