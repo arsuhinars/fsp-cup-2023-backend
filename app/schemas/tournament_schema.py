@@ -1,7 +1,7 @@
 from datetime import date
 from enum import StrEnum
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing_extensions import Annotated
 
 
@@ -13,20 +13,40 @@ class TournamentStateEnum(StrEnum):
     FINISHED = "FINISHED"
 
 
+class TournamentCreateSchema(BaseModel):
+    name: Annotated[str, Field(max_length=50)]
+    location: Annotated[str, Field(max_length=50)]
+    discipline: Annotated[str, Field(max_length=50)]
+    date_registration: date
+    date_begin: date
+    date_end: date
+    date_awards: date
+
+
 class TournamentSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[int, Field(examples=[1])]
-    name: Annotated[str, Field(max_length=50, examples=["Team name"])]
-    location: Annotated[str, Field(max_length=50, examples=["Location"])]
-    discipline: Annotated[str, Field(max_length=50, examples=["Discipline"])]
-    date_registration: Annotated[date, Field(examples=["2000-01-01"])]
-    date_begin: Annotated[date, Field(examples=["2000-02-01"])]
-    date_end: Annotated[date, Field(examples=["2000-03-01"])]
-    date_awards: Annotated[date, Field(examples=["2000-04-01"])]
-    main_judge_id: Annotated[int, Field(example=1)]
-    state: Annotated[TournamentStateEnum, Field(examples=["JUST_CREATED",
-                                                          "REGISTRATION_OPENED",
-                                                          "REGISTRATION_CLOSED",
-                                                          "ONGOING",
-                                                          "FINISHED"])]
+    id: int
+    name: Annotated[str, Field(max_length=50)]
+    location: Annotated[str, Field(max_length=50)]
+    discipline: Annotated[str, Field(max_length=50)]
+    date_registration: date
+    date_begin: date
+    date_end: date
+    date_awards: date
+
+    main_judge_id: int
+    state: TournamentStateEnum
+
+
+class TournamentUpdateSchema(BaseModel):
+    id: int
+    name: Annotated[str, Field(max_length=50)]
+    location: Annotated[str, Field(max_length=50)]
+    discipline: Annotated[str, Field(max_length=50)]
+    date_registration: date
+    date_begin: date
+    date_end: date
+    date_awards: date
+    main_judge_id: int
+    state: TournamentStateEnum

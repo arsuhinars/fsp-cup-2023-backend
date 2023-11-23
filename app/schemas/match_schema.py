@@ -1,11 +1,23 @@
-from pydantic import BaseModel, ConfigDict, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel, ConfigDict
 
 
 class MatchSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[int, Field(examples=[1])]
-    team_a_id: Annotated[int, Field(examples=[1])]
-    team_b_id: Annotated[int, Field(examples=[1])]
-    team_winner_id: Annotated[int, Field(examples=[1])]
+    id: int
+    team_a_id: int
+    team_b_id: int
+    team_winner_id: int
+
+
+class MatchCreateSchema(BaseModel):
+    id: int
+    team_a_id: int
+    team_b_id: int
+
+
+class MatchUpdateSchema(BaseModel):
+    id: int
+    team_a_id: int
+    team_b_id: int
+    team_winner_id: int
