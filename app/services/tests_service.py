@@ -301,3 +301,31 @@ def match_test() -> bool:
     delete_match2 = match_service.delete(match2_create.id)
 
     return True
+
+
+def tournament_requests_test() -> bool:
+    request1_create = tournament_request_service.create_request(tournament1.id, team1.id)
+    request2_create = tournament_request_service.create_request(tournament1.id, team2.id)
+    request3_create = tournament_request_service.create_request(tournament2.id, team1.id)
+    request4_create = tournament_request_service.create_request(tournament2.id, team2.id)
+
+    get_tournament1_requests_by_tour_id = tournament_request_service.get_tournament_requests(tournament1.id)
+    get_tournament2_requests_by_tour_id = tournament_request_service.get_tournament_requests(tournament2.id)
+
+    get_by_team1_id_= tournament_request_service.get_by_team_id(tournament1.id, team1.id)
+    get_by_team2_id_= tournament_request_service.get_by_team_id(tournament1.id, team2.id)
+    get_by_team3_id_= tournament_request_service.get_by_team_id(tournament2.id, team1.id)
+    get_by_team4_id_= tournament_request_service.get_by_team_id(tournament2.id, team2.id)
+
+    accept_request1 = tournament_request_service.accept_request(request1_create.id)
+    accept_request2 = tournament_request_service.accept_request(request2_create.id)
+    accept_request3 = tournament_request_service.accept_request(request3_create.id)
+    accept_request4 = tournament_request_service.accept_request(request4_create.id)
+
+    decline_request1 = tournament_request_service.decline_request(request1_create.id)
+    decline_request2 = tournament_request_service.decline_request(request2_create.id)
+    decline_request3 = tournament_request_service.decline_request(request3_create.id)
+    decline_request4 = tournament_request_service.decline_request(request4_create.id)
+
+    return True
+
