@@ -7,9 +7,7 @@ from app.exceptions import (
     ValidationException,
 )
 from app.models.team import Team
-from app.schemas.team_create_schema import TeamCreateSchema
-from app.schemas.team_schema import TeamSchema
-from app.schemas.team_update_schema import TeamUpdateSchema
+from app.schemas.team_schema import TeamCreateSchema, TeamSchema, TeamUpdateSchema
 from app.schemas.user_schema import UserRole
 from app.utils import map_model_to_orm
 
