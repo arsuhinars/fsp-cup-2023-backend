@@ -4,10 +4,12 @@ from fastapi import APIRouter, Depends
 
 import app.services.user_service as user_service
 from app.models.user import User, UserRole
-from app.schemas.user_create_schema import UserCreateSchema
-from app.schemas.user_password_update_schema import UserPasswordUpdateSchema
-from app.schemas.user_schema import UserSchema
-from app.schemas.user_update_schema import UserUpdateSchema
+from app.schemas.user_schema import (
+    UserCreateSchema,
+    UserPasswordUpdateSchema,
+    UserSchema,
+    UserUpdateSchema,
+)
 from app.security import authenticate, require_admin
 
 router = APIRouter(prefix="/users", tags=["User"])

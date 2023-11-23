@@ -3,9 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.exceptions import EntityNotFoundException
-from app.schemas.team_create_schema import TeamCreateSchema
-from app.schemas.team_schema import TeamSchema
-from app.schemas.team_update_schema import TeamUpdateSchema
+from app.schemas.team_schema import TeamCreateSchema, TeamSchema, TeamUpdateSchema
 from app.schemas.user_schema import UserSchema
 from app.security import authenticate, require_team_captain
 from app.services import team_service
