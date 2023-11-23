@@ -29,3 +29,6 @@ class Tournament(Base):
     tournament_sets: Mapped[list["TournamentSet"]] = relationship(
         back_populates="tournament"
     )
+    tournament_requests: Mapped[list["TournamentRequest"]] = relationship(
+        back_populates="tournament"
+    )
