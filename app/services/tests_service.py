@@ -329,3 +329,16 @@ def tournament_requests_test() -> bool:
 
     return True
 
+
+def run_all_tests() -> bool:
+    init()
+    player_test()
+    team_test()
+    user_test()
+    tournament_test()
+    team_composition_test()
+    match_test()
+    tournament_requests_test()
+
+    return True
+
