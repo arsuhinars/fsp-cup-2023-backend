@@ -40,8 +40,9 @@ def get_team_comps(tournament_id: int) -> list[TeamCompositionSchema]:
         tournament = tournament_repo.get_by_id(session, tournament_id)
         if tournament is None:
             raise EntityNotFoundException("Tournament was not found")
-        # FIXME: возвращать схему, а не класс
-        return tournament.team_compositions
+        return list(map(
+            lambda ts: TeamCompositionSchema.model_validate(ts.team_composition),
+            tournament.tournament_sets))
 
 
 def update(tournament_id: int, dto: TournamentUpdateSchema) -> TournamentSchema:

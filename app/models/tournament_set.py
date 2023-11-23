@@ -1,7 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
 
@@ -17,3 +17,10 @@ class TournamentSet(Base):
     )
     order_number: Mapped[int] = mapped_column(Integer)
     result_place: Mapped[Optional[int]] = mapped_column(Integer, default=None)
+
+    tournament: Mapped["Tournament"] = relationship(
+        back_populates="tournament_sets"
+    )
+    team_composition: Mapped["TeamComposition"] = relationship(
+        back_populates="tournament_sets"
+    )
