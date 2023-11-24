@@ -29,7 +29,7 @@ def create_team_player(
 
 @router.get("/teams/{team_id}/players", dependencies=[Depends(authenticate)])
 def get_team_players(team_id: int):
-    return player_service.get_all_in_team(team_id)
+    return player_service.get_team_players(team_id)
 
 
 @router.get("/players/{player_id}", dependencies=[Depends(authenticate)])
