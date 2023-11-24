@@ -7,9 +7,7 @@ def get_all(session) -> list[TournamentSet]:
     return session.query(TournamentSet).all()
 
 
-def get_by_id(
-    session, tournament_id: int, team_composition_id: int
-) -> list[TournamentSet]:
+def get_by_id(session, tournament_id: int, team_composition_id: int) -> list[TournamentSet]:
     return session.select(TournamentSet).where(
         TournamentSet.tournament_id == tournament_id,
         TournamentSet.team_composition_id == team_composition_id,
