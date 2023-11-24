@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 
 from app.schemas.match_schema import MatchSchema, UpdateMatchSchema
-from app.schemas.tournament_schema import TournamentStartRequest
+from app.schemas.tournament_schema import TournamentStartSchema
 from app.security import require_judge
 
 router = APIRouter(prefix="/tournaments", tags=["Tournament"])
 
 
 @router.post("/{tournament_id}/start", dependencies=[Depends(require_judge)])
-def start_tournament(tournament_id: int, body: TournamentStartRequest):
+def start_tournament(tournament_id: int, body: TournamentStartSchema):
     ...
 
 
