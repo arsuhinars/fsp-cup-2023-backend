@@ -22,7 +22,7 @@ PasswordField = Annotated[
     Field(
         min_length=8,
         max_length=50,
-        pattern=r"[a-zA-Z0-9!()?{}_`~;:@#$%^&+=\-.]*",
+        pattern=r"[a-zA-Z0-9!()?{}_`~;@#$%^&+=\-.]*",
         examples=["password"],
     ),
 ]
