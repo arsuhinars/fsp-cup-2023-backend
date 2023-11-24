@@ -8,6 +8,7 @@ from app.schemas.tournament_schema import (
     TournamentSchema,
     TournamentUpdateSchema,
 )
+from app.schemas.tournament_set_schema import TournamentSetSchema
 from app.schemas.user_schema import UserSchema
 from app.security import authenticate, require_judge
 from app.services import tournament_service
@@ -59,3 +60,12 @@ def delete_tournament(tournament_id: int) -> bool:
 )
 def get_tournament_team_compositions(tournament_id: int):
     return tournament_service.get_team_comps(tournament_id)
+
+
+@router.get(
+    "/{tournament_id}/results",
+    response_model=list[TournamentSetSchema],
+    dependencies=[Depends(authenticate)],
+)
+def get_tournament_results(tournament_id: int):
+    ...

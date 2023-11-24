@@ -1,5 +1,6 @@
 from datetime import date
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing_extensions import Annotated
@@ -49,3 +50,15 @@ class TournamentUpdateSchema(BaseModel):
     date_end: date
     date_awards: date
     main_judge_id: int
+
+
+class TournamentStartByListRequest(BaseModel):
+    toss_type: Literal["list"]
+    team_compositions_ids: list[int]
+
+
+class TournamentStartRandomRequest(BaseModel):
+    toss_type: Literal["random"]
+
+
+TournamentStartRequest = TournamentStartByListRequest | TournamentStartRandomRequest

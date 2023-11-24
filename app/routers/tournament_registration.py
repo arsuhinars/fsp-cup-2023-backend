@@ -10,6 +10,20 @@ from app.services import tournament_requests_service
 router = APIRouter(prefix="/tournaments", tags=["Tournament"])
 
 
+@router.post(
+    "/{tournament_id}/start_registartion", dependencies=[Depends(require_judge)]
+)
+def start_tournament_registration(tournament_id: int):
+    ...
+
+
+@router.post(
+    "/{tournament_id}/close_registartion", dependencies=[Depends(require_judge)]
+)
+def close_tournament_registration(tournament_id: int):
+    ...
+
+
 @router.get("/{tournament_id}/requests", response_model=list[TournamentRequestSchema])
 def get_tournament_requests(
     tournament_id: int,
