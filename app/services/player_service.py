@@ -8,6 +8,7 @@ from app.schemas.player_schema import (
     PlayerCreateSchema,
     PlayerSchema,
     PlayerUpdateSchema,
+    ShortPlayerSchema,
 )
 from app.utils import map_model_to_orm
 
@@ -27,7 +28,7 @@ def create_in_team(dto: PlayerCreateSchema, team_id: int) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict())
 
 
-def get_team_players(team_id: int) -> list[PlayerSchema]:
+def get_team_players(team_id: int) -> list[ShortPlayerSchema]:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:

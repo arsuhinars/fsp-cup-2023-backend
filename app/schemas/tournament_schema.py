@@ -49,3 +49,7 @@ class TournamentUpdateSchema(BaseModel):
     date_end: date
     date_awards: date
     main_judge_id: int
+
+
+class TournamentStartSchema(BaseModel):
+    team_compositions_ids: list[int]
