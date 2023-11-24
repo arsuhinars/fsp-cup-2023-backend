@@ -39,7 +39,7 @@ def get_team_players(team_id: int) -> list[PlayerSchema]:
             team.players,
         )
 
-        return list(map(PlayerSchema.model_validate, players))
+        return sorted(map(PlayerSchema.model_validate, players), key=lambda p: p["id"])
 
 
 def get_by_id(player_id: int) -> PlayerSchema:
