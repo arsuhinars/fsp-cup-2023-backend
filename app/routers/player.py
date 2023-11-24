@@ -24,7 +24,7 @@ def create_team_player(
     if team is None:
         raise EntityNotFoundException("Team was not found")
 
-    return player_service.create_in_team(team.id, player)
+    return player_service.create_in_team(player, team.id)
 
 
 @router.get("/teams/{team_id}/players", dependencies=[Depends(authenticate)])

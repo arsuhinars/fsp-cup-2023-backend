@@ -12,7 +12,7 @@ from app.schemas.player_schema import (
 from app.utils import map_model_to_orm
 
 
-def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
+def create_in_team(dto: PlayerCreateSchema, team_id: int) -> PlayerSchema:
     player = Player(**dto.model_dump())
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
