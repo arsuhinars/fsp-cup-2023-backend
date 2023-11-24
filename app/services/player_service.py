@@ -88,7 +88,7 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict(active_composition))
 
 
-def delete(player_id: int) -> PlayerSchema:
+def delete(player_id: int) -> None:
     with db.create_session() as session:
         player = player_repo.get_by_id(session, player_id)
         if player is None or player.deleted:
