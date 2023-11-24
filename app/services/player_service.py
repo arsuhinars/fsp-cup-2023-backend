@@ -27,7 +27,7 @@ def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict())
 
 
-def get_all_in_team(team_id: int) -> list[PlayerSchema]:
+def get_team_players(team_id: int) -> list[PlayerSchema]:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
