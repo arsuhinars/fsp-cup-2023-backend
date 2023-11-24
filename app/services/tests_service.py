@@ -1,29 +1,18 @@
-from app.schemas.match_create_schema import MatchCreateSchema
-from app.schemas.match_schema import MatchUpdateSchema
-from app.schemas.user_create_schema import UserCreateSchema
 import match_service
 import player_service
 import team_composition_service
 import team_service
 import tournament_service
 import user_service
+from app.schemas.player_schema import PlayerCreateSchema
+from app.schemas.team_composition_schema import TeamCompositionSchema
+from app.schemas.team_schema import TeamCreateSchema
+from app.schemas.user_schema import UserCreateSchema
 
 global_vars = {}
 
-def init() -> bool:
-    global_vars["captain1"] = user_service.create(UserCreateSchema(
-        first_name="Name1",
-        last_name="Lastname1",
-        patronymic="Patronymic1",
-        birth_date="2000-01-01",
-        country="Country1",
-        city="City1",
-        phone="+7(999)999-99-99",
-        email="address1@domain.com",
-        password="password",
-        role="Captain",
-    ))
 
+def init() -> bool:
     global_vars["admin"] = user_service.create(UserCreateSchema(
         first_name="Name2",
         last_name="Lastname2",
@@ -50,6 +39,19 @@ def init() -> bool:
         role="Judge",
     ))
 
+    global_vars["captain1"] = user_service.create(UserCreateSchema(
+        first_name="Name1",
+        last_name="Lastname1",
+        patronymic="Patronymic1",
+        birth_date="2000-01-01",
+        country="Country1",
+        city="City1",
+        phone="+7(999)999-99-99",
+        email="address1@domain.com",
+        password="password",
+        role="Captain",
+    ))
+
     global_vars["captain2"] = user_service.create(UserCreateSchema(
         first_name="Name4",
         last_name="Lastname4",
@@ -63,17 +65,13 @@ def init() -> bool:
         role="Captain",
     ))
 
-
     global_vars["team1"] = team_service.create(TeamCreateSchema(
-        leader_id=captain1.id,
         name="Team1",
-    ))
+    ), global_vars["captain1"].id)
 
     global_vars["team2"] = team_service.create(TeamCreateSchema(
-        leader_id=captain2.id,
         name="Team2",
-    ))
-
+    ), leader_id=global_vars["captain2"].id)
 
     global_vars["player1_team1"] = player_service.create_in_team(PlayerCreateSchema(
         gto_id="123",
@@ -147,19 +145,18 @@ def init() -> bool:
         is_active_in_team=True,
     ))
 
-
     global_vars["team_composition1_team1"] = team_composition_service.create(TeamCompositionSchema(
-        team=team1,
+        team=global_vars["team1"],
         players=[player1_team1, player2_team1],
     ))
 
     global_vars["team_composition2_team1"] = team_composition_service.create(TeamCompositionSchema(
-        team=team1,
+        team=global_vars["team1"],
         players=[player1_team1, player2_team1],
     ))
 
     global_vars["team_composition1_team2"] = team_composition_service.create(TeamCompositionSchema(
-        team=team2,
+        team=global_vars["team2"],
         players=[player1_team2, player2_team2],
     ))
 
@@ -187,7 +184,6 @@ def init() -> bool:
         state="JUST_CREATED",
     ))
 
-
     global_vars["match1"] = match_service.create(MatchCreateSchema(
         team_a_id=team1.id,
         team_b_id=team2.id,
@@ -202,7 +198,7 @@ def init() -> bool:
 
 
 def player_test() -> bool:
-    player1_create = player_service.create_in_team(team1.id, player1_team1) 
+    player1_create = player_service.create_in_team(team1.id, player1_team1)
     player2_create = player_service.create_in_team(team2.id, player1_team2)
 
     players1_get_all = player_service.get_all_in_team(team1.id)
@@ -286,7 +282,6 @@ def team_composition_test() -> bool:
     team_composition2_create = team_composition_service.create(team_composition1_team2)
     team_composition3_create = team_composition_service.create(team_composition2_team1)
 
-    
     return True
 
 
@@ -312,10 +307,10 @@ def tournament_requests_test() -> bool:
     get_tournament1_requests_by_tour_id = tournament_request_service.get_tournament_requests(tournament1.id)
     get_tournament2_requests_by_tour_id = tournament_request_service.get_tournament_requests(tournament2.id)
 
-    get_by_team1_id_= tournament_request_service.get_by_team_id(tournament1.id, team1.id)
-    get_by_team2_id_= tournament_request_service.get_by_team_id(tournament1.id, team2.id)
-    get_by_team3_id_= tournament_request_service.get_by_team_id(tournament2.id, team1.id)
-    get_by_team4_id_= tournament_request_service.get_by_team_id(tournament2.id, team2.id)
+    get_by_team1_id_ = tournament_request_service.get_by_team_id(tournament1.id, team1.id)
+    get_by_team2_id_ = tournament_request_service.get_by_team_id(tournament1.id, team2.id)
+    get_by_team3_id_ = tournament_request_service.get_by_team_id(tournament2.id, team1.id)
+    get_by_team4_id_ = tournament_request_service.get_by_team_id(tournament2.id, team2.id)
 
     accept_request1 = tournament_request_service.accept_request(request1_create.id)
     accept_request2 = tournament_request_service.accept_request(request2_create.id)
@@ -341,4 +336,3 @@ def run_all_tests() -> bool:
     tournament_requests_test()
 
     return True
-
