@@ -21,10 +21,14 @@ class TeamComposition(Base):
     win_matches: Mapped[list["Match"]] = relationship(
         foreign_keys="Match.team_composition_winner_id"
     )
-    tournaments: Mapped[list["Tournament"]] = relationship(
-        secondary="tournament_set",
-        back_populates="team_compositions",
+    # tournaments: Mapped[list["Tournament"]] = relationship(
+    #     secondary="tournament_set",
+    #     back_populates="team_compositions",
+    # )
+    tournament_sets: Mapped[list["TournamentSet"]] = relationship(
+        back_populates="team_composition"
     )
     players: Mapped[set["Player"]] = relationship(
-        secondary="team_composition_set", back_populates="team_compositions"
+        secondary="team_composition_set",
+        back_populates="team_compositions"
     )

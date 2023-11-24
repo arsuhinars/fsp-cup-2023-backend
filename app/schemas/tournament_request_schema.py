@@ -17,5 +17,5 @@ class TournamentRequestSchema(BaseModel):
 
     id: int
     team: TeamSchema
-    active_team_players: list[PlayerSchema]
+    active_players: list[PlayerSchema]
     status: TournamentRequestStatus

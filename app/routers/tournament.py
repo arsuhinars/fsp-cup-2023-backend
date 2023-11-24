@@ -18,8 +18,8 @@ router = APIRouter(prefix="/tournaments", tags=["Tournament"])
 
 @router.post("/", response_model=TournamentSchema)
 def create_tournament(
-    tournament: TournamentCreateSchema,
-    user: Annotated[UserSchema, Depends(require_judge)],
+        tournament: TournamentCreateSchema,
+        user: Annotated[UserSchema, Depends(require_judge)],
 ) -> TournamentSchema:
     return tournament_service.create(tournament, user.id)
 
@@ -42,11 +42,12 @@ def get_tournament_by_id(tournament_id: int):
 
 @router.put("/{tournament_id}")
 def update_tournament(
-    tournament_id: int,
-    tournament: TournamentUpdateSchema,
-    user: Annotated[UserSchema, Depends(require_judge)],
+        tournament_id: int,
+        tournament: TournamentUpdateSchema,
+        user: Annotated[UserSchema, Depends(require_judge)],
 ) -> TournamentSchema:
-    # TODO проверка на судью
+    if user.role != "JUDGE":
+        raise Exception("Only judges can update tournaments")
     return tournament_service.update(tournament_id, tournament)
 
 
@@ -61,41 +62,41 @@ def delete_tournament(tournament_id: int) -> bool:
     dependencies=[Depends(authenticate)],
 )
 def get_tournament_team_compositions(tournament_id: int):
-    ...
+    return tournament_service.get_team_comps(tournament_id)
 
 
 @router.get("/{tournament_id}/requests", response_model=list[TournamentRequestSchema])
 def get_tournament_requests(
-    tournament_id: int,
-    user: Annotated[UserSchema, Depends(require_judge)],
+        tournament_id: int,
+        user: Annotated[UserSchema, Depends(require_judge)],
 ):
-    ...
+    return tournament_service.get_tournament_requests_by_tournament_id(tournament_id)
 
 
 @router.get("/{tournament_id}/requests/my", response_model=TournamentRequestSchema)
 def get_my_tournament_request(
-    tournament_id: int,
-    user: Annotated[UserSchema, Depends(require_team_captain)],
+        tournament_id: int,
+        user: Annotated[UserSchema, Depends(require_team_captain)],
 ):
-    ...
+    return tournament_service.get_tournament_request_by_tournament_id_and_captain_id(tournament_id, user.id)
 
 
 @router.post("/{tournament_id}/requests", response_model=TournamentRequestSchema)
 def create_tournament_request(
-    user: Annotated[UserSchema, Depends(require_team_captain)]
+        user: Annotated[UserSchema, Depends(require_team_captain)]
 ):
     ...
 
 
 @router.post("/requests/{request_id}/accept")
 def accept_tournament_request(
-    request_id: int, user: Annotated[UserSchema, Depends(require_judge)]
+        request_id: int, user: Annotated[UserSchema, Depends(require_judge)]
 ):
     ...
 
 
 @router.post("/requests/{request_id}/decline")
 def decline_tournament_request(
-    request_id: int, user: Annotated[UserSchema, Depends(require_judge)]
+        request_id: int, user: Annotated[UserSchema, Depends(require_judge)]
 ):
     ...
