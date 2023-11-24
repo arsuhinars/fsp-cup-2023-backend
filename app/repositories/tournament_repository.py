@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.tournament import Tournament
-from app.models.tournament_request import TournamentRequest
+from app.models.tournament_set import TournamentSet
 
 
 def get_all(session: Session) -> list[Tournament]:
@@ -10,6 +10,12 @@ def get_all(session: Session) -> list[Tournament]:
 
 def get_by_id(session: Session, tournament_id: int) -> Tournament | None:
     return session.get(Tournament, tournament_id)
+
+
+def get_set_by_team_comp_id(
+    session: Session, tournament_id: int, team_composition_id: int
+) -> TournamentSet | None:
+    return session.get(TournamentSet, (tournament_id, team_composition_id))
 
 
 def save(session: Session, tournament: Tournament) -> Tournament:
@@ -22,10 +28,3 @@ def save(session: Session, tournament: Tournament) -> Tournament:
 def delete(session: Session, tournament: Tournament) -> None:
     session.delete(tournament)
     session.commit()
-
-
-def get_tournament_request_by_tournament_id_and_captain_id(
-        session: Session,
-        tournament_id: int,
-        captain_id: int) -> TournamentRequest | None:
-    return [tr for tr in session.get(Tournament, tournament_id).tournament_requests if tr.captain_id == captain_id][0]
