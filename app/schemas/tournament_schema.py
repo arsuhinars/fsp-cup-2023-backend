@@ -40,7 +40,6 @@ class TournamentSchema(BaseModel):
 
 
 class TournamentUpdateSchema(BaseModel):
-    id: int
     name: Annotated[str, Field(max_length=50)]
     location: Annotated[str, Field(max_length=50)]
     discipline: Annotated[str, Field(max_length=50)]
@@ -48,7 +47,6 @@ class TournamentUpdateSchema(BaseModel):
     date_begin: date
     date_end: date
     date_awards: date
-    main_judge_id: int
 
 
 class TournamentStartSchema(BaseModel):
