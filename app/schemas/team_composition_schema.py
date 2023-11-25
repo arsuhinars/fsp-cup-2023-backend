@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from app.schemas.player_schema import PlayerSchema
+from app.schemas.player_schema import ShortPlayerSchema
 from app.schemas.team_schema import TeamSchema
 
 
@@ -9,7 +9,7 @@ class TeamCompositionSchema(BaseModel):
 
     id: int
     team: TeamSchema
-    players: list[PlayerSchema]
+    players: list[ShortPlayerSchema]
 
 
 class ShortTeamCompositionSchema(BaseModel):
