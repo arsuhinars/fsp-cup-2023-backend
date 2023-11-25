@@ -23,3 +23,4 @@ ENTRYPOINT [ "bash", "-c", "uvicorn app.main:app --port $SERVER_PORT --host 0.0.
 FROM base as run
 
 COPY app/ app/
+COPY templates/ templates/
