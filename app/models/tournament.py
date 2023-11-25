@@ -1,6 +1,7 @@
 from datetime import date
 
 from sqlalchemy import Date, Enum, ForeignKey, String
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -20,7 +21,8 @@ class Tournament(Base):
     date_awards: Mapped[date] = mapped_column(Date)
     main_judge_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     state: Mapped["TournamentStateEnum"] = mapped_column(
-        Enum(TournamentStateEnum), default=TournamentStateEnum.JUST_CREATED)
+        Enum(TournamentStateEnum), default=TournamentStateEnum.JUST_CREATED
+    )
 
     main_judge: Mapped["User"] = relationship(back_populates="judge_tournaments")
     # team_compositions: Mapped[list["TeamComposition"]] = relationship(
@@ -32,3 +34,7 @@ class Tournament(Base):
     tournament_requests: Mapped[list["TournamentRequest"]] = relationship(
         back_populates="tournament"
     )
+
+    @hybrid_property
+    def main_judge_full_name(self):
+        return f"{self.main_judge.last_name} {self.main_judge.first_name} {self.main_judge.patronymic}"

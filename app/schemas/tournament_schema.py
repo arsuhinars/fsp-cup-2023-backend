@@ -36,6 +36,7 @@ class TournamentSchema(BaseModel):
     date_awards: date
 
     main_judge_id: int
+    main_judge_full_name: str
     state: TournamentStateEnum
 
 
