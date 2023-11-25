@@ -4,6 +4,8 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing_extensions import Annotated
 
+from app.schemas.team_schema import TeamSchema
+
 
 class JudgeRankEnum(StrEnum):
     MATCH_JUDGE = "MATCH_JUDGE"
@@ -42,6 +44,7 @@ class UserSchema(BaseModel):
     email: EmailStr
     role: UserRole
     judge_rank: JudgeRankEnum | None = None
+    team: TeamSchema | None
 
 
 class UserCreateSchema(BaseModel):
