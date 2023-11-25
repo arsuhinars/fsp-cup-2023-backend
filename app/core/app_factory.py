@@ -6,11 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core import db
 from app.core.settings import settings
 from app.exceptions import EntityAlreadyExistsException
-from app.routers.match import router as match_router
 from app.routers.player import router as player_router
 from app.routers.status import router as status_router
 from app.routers.team import router as team_router
 from app.routers.tournament import router as tournament_router
+from app.routers.tournament_ongoing import router as tournament_ongoing_router
+from app.routers.tournament_registration import router as tournament_registration_router
 from app.routers.user import router as user_router
 from app.services import user_service
 
@@ -36,8 +37,9 @@ def create_app():
     app.include_router(status_router)
     app.include_router(user_router)
     app.include_router(player_router)
-    app.include_router(match_router)
     app.include_router(tournament_router)
+    app.include_router(tournament_registration_router)
+    app.include_router(tournament_ongoing_router)
     app.include_router(team_router)
 
     app.add_middleware(

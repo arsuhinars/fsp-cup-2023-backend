@@ -8,11 +8,12 @@ from app.schemas.player_schema import (
     PlayerCreateSchema,
     PlayerSchema,
     PlayerUpdateSchema,
+    ShortPlayerSchema,
 )
 from app.utils import map_model_to_orm
 
 
-def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
+def create_in_team(dto: PlayerCreateSchema, team_id: int) -> PlayerSchema:
     player = Player(**dto.model_dump())
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
@@ -27,7 +28,7 @@ def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict())
 
 
-def get_team_players(team_id: int) -> list[PlayerSchema]:
+def get_team_players(team_id: int) -> list[ShortPlayerSchema]:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
@@ -39,7 +40,7 @@ def get_team_players(team_id: int) -> list[PlayerSchema]:
             team.players,
         )
 
-        return list(map(PlayerSchema.model_validate, players))
+        return sorted(map(PlayerSchema.model_validate, players), key=lambda p: p["id"])
 
 
 def get_by_id(player_id: int) -> PlayerSchema:
@@ -88,7 +89,7 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict(active_composition))
 
 
-def delete(player_id: int) -> PlayerSchema:
+def delete(player_id: int) -> None:
     with db.create_session() as session:
         player = player_repo.get_by_id(session, player_id)
         if player is None or player.deleted:

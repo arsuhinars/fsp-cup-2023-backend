@@ -10,6 +10,7 @@ router = APIRouter(tags=["team_composition"])
 def get_team_composition_players(team_composition_id: int):
     pass
 
+
 @router.post("team_comp")
 def create_team_comp(team: TeamComposition) -> int:
     return team_composition_service.create(team)

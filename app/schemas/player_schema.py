@@ -32,6 +32,17 @@ class PlayerSchema(BaseModel):
     is_active_in_team: bool
 
 
+class ShortPlayerSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    nickname: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
+    last_name: Annotated[str, Field(max_length=50)]
+    patronymic: Annotated[str, Field(max_length=50)]
+    gender: GenderEnum
+
+
 class PlayerCreateSchema(BaseModel):
     gto_id: str
     nickname: Annotated[str, Field(max_length=50)]
