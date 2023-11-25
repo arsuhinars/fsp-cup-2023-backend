@@ -1,4 +1,5 @@
 from sqlalchemy import ForeignKey
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -29,6 +30,9 @@ class TeamComposition(Base):
         back_populates="team_composition"
     )
     players: Mapped[set["Player"]] = relationship(
-        secondary="team_composition_set",
-        back_populates="team_compositions"
+        secondary="team_composition_set", back_populates="team_compositions"
     )
+
+    @hybrid_property
+    def team_name(self):
+        return self.team.name
