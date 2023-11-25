@@ -4,13 +4,15 @@ from fastapi import APIRouter, Depends
 
 import app.services.user_service as user_service
 from app.models.user import User, UserRole
-from app.schemas.user_create_schema import UserCreateSchema
-from app.schemas.user_password_update_schema import UserPasswordUpdateSchema
-from app.schemas.user_schema import UserSchema
-from app.schemas.user_update_schema import UserUpdateSchema
+from app.schemas.user_schema import (
+    UserCreateSchema,
+    UserPasswordUpdateSchema,
+    UserSchema,
+    UserUpdateSchema,
+)
 from app.security import authenticate, require_admin
 
-router = APIRouter(prefix="/users", tags=["user"])
+router = APIRouter(prefix="/users", tags=["User"])
 
 
 @router.post("/", response_model=UserSchema, dependencies=[Depends(require_admin)])
@@ -42,12 +44,16 @@ def update_current_user_password(
     return user_service.update_password(user.id, user_schema)
 
 
-@router.get("/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
+@router.get(
+    "/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)]
+)
 def get_user_by_id(user_id: int):
     return user_service.get_by_id(user_id)
 
 
-@router.put("/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)])
+@router.put(
+    "/{user_id}", response_model=UserSchema, dependencies=[Depends(require_admin)]
+)
 def update_user_by_id(user_id: int, user: UserUpdateSchema):
     return user_service.update(user_id, user)
 
