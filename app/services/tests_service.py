@@ -1,16 +1,18 @@
-import match_service
-import player_service
-import team_composition_service
-import team_service
-import tournament_service
-import tournament_requests_service
-import user_service
 from app.models.team_composition import TeamComposition
-from app.schemas.match_schema import MatchCreateSchema
+from app.schemas.match_schema import MatchSchema
 from app.schemas.player_schema import PlayerCreateSchema
 from app.schemas.team_schema import TeamCreateSchema
 from app.schemas.tournament_schema import TournamentCreateSchema
 from app.schemas.user_schema import UserCreateSchema, UserRole
+from app.services import (
+    match_service,
+    player_service,
+    team_composition_service,
+    team_service,
+    tournament_requests_service,
+    tournament_service,
+    user_service,
+)
 
 gv = {}
 
@@ -26,7 +28,7 @@ def init() -> bool:
         phone="+7(999)999-99-99",
         email="address2@domain.com",
         password="password",
-        role="Admin",
+        role="ADMIN",
     ))
 
     gv["judge"] = user_service.create(UserCreateSchema(
@@ -39,7 +41,7 @@ def init() -> bool:
         phone="+7(999)999-99-99",
         email="address3@domain.com",
         password="password",
-        role="Judge",
+        role="JUDGE",
     ))
 
     gv["captain1"] = user_service.create(UserCreateSchema(
@@ -52,7 +54,7 @@ def init() -> bool:
         phone="+7(999)999-99-99",
         email="address1@domain.com",
         password="password",
-        role="Captain",
+        role="TEAM_CAPTAIN",
     ))
 
     gv["captain2"] = user_service.create(UserCreateSchema(
@@ -65,7 +67,7 @@ def init() -> bool:
         phone="+7(999)999-99-99",
         email="address4@domain.com",
         password="password",
-        role="Captain",
+        role="TEAM_CAPTAIN",
     ))
 
     gv["team1"] = team_service.create(TeamCreateSchema(
@@ -90,8 +92,7 @@ def init() -> bool:
         email="address1@domain.com",
         citizenship="Citizenship1",
         rank="Rank1",
-        pd_accepted=True,
-        is_active_in_team=True,
+        pd_accepted=True
     ), gv["team1"].id)
 
     gv["player2_team1"] = player_service.create_in_team(PlayerCreateSchema(
@@ -108,8 +109,7 @@ def init() -> bool:
         email="address2@domain.com",
         citizenship="Citizenship2",
         rank="Rank2",
-        pd_accepted=True,
-        is_active_in_team=True,
+        pd_accepted=True
     ), gv["team1"].id)
 
     gv["player1_team2"] = player_service.create_in_team(PlayerCreateSchema(
@@ -126,8 +126,7 @@ def init() -> bool:
         email="address3@domain.com",
         citizenship="Citizenship3",
         rank="Rank3",
-        pd_accepted=True,
-        is_active_in_team=True,
+        pd_accepted=True
     ), gv["team2"].id)
 
     gv["player2_team2"] = player_service.create_in_team(PlayerCreateSchema(
@@ -144,24 +143,9 @@ def init() -> bool:
         email="address4@domain.com",
         citizenship="Citizenship4",
         rank="Rank4",
-        pd_accepted=True,
-        is_active_in_team=True,
+        pd_accepted=True
     ), gv["team2"].id)
 
-    gv["team_composition1_team1"] = team_composition_service.create(TeamComposition(
-        team=gv["team1"],
-        players=[gv["player1_team1"], gv["player2_team1"]],
-    ))
-
-    gv["team_composition2_team1"] = team_composition_service.create(TeamComposition(
-        team=gv["team1"],
-        players=[gv["player1_team1"], gv["player2_team1"]],
-    ))
-
-    gv["team_composition1_team2"] = team_composition_service.create(TeamComposition(
-        team=gv["team2"],
-        players=[gv["player1_team2"], gv["player2_team2"]],
-    ))
 
     gv["tournament1"] = tournament_service.create(TournamentCreateSchema(
         name="Tournament1",
@@ -185,12 +169,30 @@ def init() -> bool:
         state="JUST_CREATED",
     ), gv["judge"].id)
 
-    gv["match1"] = match_service.create(MatchCreateSchema(
+    player_service.set_active(gv["player1_team1"].id, True)
+    player_service.set_active(gv["player2_team1"].id, False)
+    gv["request1"] = tournament_requests_service.create_request(gv["tournament1"].id, gv["team1"].id)
+    tournament_requests_service.accept_request(gv["request1"].id)
+    player_service.set_active(gv["player1_team2"].id, True)
+    player_service.set_active(gv["player2_team2"].id, True)
+    gv["request2"] = tournament_requests_service.create_request(gv["tournament1"].id, gv["team2"].id)
+    tournament_requests_service.accept_request(gv["request2"].id)
+
+    player_service.set_active(gv["player1_team1"].id, True)
+    player_service.set_active(gv["player2_team1"].id, True)
+    gv["request3"] = tournament_requests_service.create_request(gv["tournament2"].id, gv["team1"].id)
+    tournament_requests_service.accept_request(gv["request3"].id)
+    player_service.set_active(gv["player1_team2"].id, True)
+    player_service.set_active(gv["player2_team2"].id, False)
+    gv["request4"] = tournament_requests_service.create_request(gv["tournament2"].id, gv["team2"].id)
+    tournament_requests_service.accept_request(gv["request4"].id)
+
+    gv["match1"] = match_service.create(MatchSchema(
         team_a_id=gv["team1.id"],
         team_b_id=gv["team2.id"],
     ))
 
-    gv["match2"] = match_service.create(MatchCreateSchema(
+    gv["match2"] = match_service.create(MatchSchema(
         team_a_id=gv["team1.id"],
         team_b_id=gv["team2.id"],
     ))
@@ -307,8 +309,8 @@ def tournament_requests_test() -> bool:
     request3_create = tournament_requests_service.create_request(gv["tournament2"].id, gv["team_composition2_team1"].id)
     request4_create = tournament_requests_service.create_request(gv["tournament2"].id, gv["team_composition1_team2"].id)
 
-    get_tournament1_requests_by_tour_id = tournament_requests_service.get_tournament_requests(gv["tournament1"].id)
-    get_tournament2_requests_by_tour_id = tournament_requests_service.get_tournament_requests(gv["tournament2"].id)
+    get_tournament1_requests_by_tour_id = tournament_requests_service.get_by_tournament_id(gv["tournament1"].id)
+    get_tournament2_requests_by_tour_id = tournament_requests_service.get_by_tournament_id(gv["tournament2"].id)
 
     get_by_team1_id_ = tournament_requests_service.get_by_team_comp_id(gv["tournament1"].id, gv["team1"].id)
     get_by_team2_id_ = tournament_requests_service.get_by_team_comp_id(gv["tournament1"].id, gv["team2"].id)
