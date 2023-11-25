@@ -1,13 +1,14 @@
+import app.repositories.team_composition_repository as team_comp_repo
+import app.repositories.team_repository as team_repo
 import app.repositories.tournament_repository as tournament_repo
 import app.repositories.tournament_requests_repository as tournament_request_repo
-import app.repositories.team_repository as team_repo
-import app.repositories.team_composition_repository as team_comp_repo
 from app.core import db
 from app.exceptions import (
     EntityNotFoundException,
     InvalidFormatException,
     ValidationException,
 )
+from app.models import team_composition
 from app.models.team_composition import TeamComposition
 from app.models.tournament import Tournament
 from app.models.tournament_request import TournamentRequest
@@ -24,9 +25,14 @@ def create_request(tournament_id: int, team_id: int) -> TournamentRequestSchema:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
             raise EntityNotFoundException("Team was not found")
-        team_comp = TeamComposition(team_id=team_id)
-        team_comp.players = [player for player in team.players if player.active]
-        team_comp = team_comp_repo.save(session, team_comp)
+        active_comp = team_repo.get_active_composition(session, team)
+        if active_comp is None:
+            raise EntityNotFoundException("Team composition was not found")
+        new_comp = TeamComposition(
+            team_id=team_id,
+            is_active=False
+        )
+        new_comp.players = set(active_comp.players)
 
         tournament = tournament_repo.get_by_id(session, tournament_id)
         if tournament is None:
@@ -34,11 +40,12 @@ def create_request(tournament_id: int, team_id: int) -> TournamentRequestSchema:
         if not tournament.state != TournamentStateEnum.REGISTRATION_OPENED:
             raise ValidationException("Tournament is not open for registration")
 
+        request = TournamentRequest(tournament_id=tournament_id)
+        request.team_composition = new_comp
+
         request = tournament_request_repo.save(
             session,
-            TournamentRequest(
-                tournament_id=tournament_id, team_composition_id=team_comp.id
-            ),
+            request
         )
         return TournamentRequestSchema.model_validate(request)
 
