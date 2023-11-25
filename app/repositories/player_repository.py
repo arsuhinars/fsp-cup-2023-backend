@@ -7,6 +7,14 @@ def get_by_id(session: Session, player_id: int) -> Player | None:
     return session.get(Player, player_id)
 
 
+def get_active_by_team_id(session: Session, team_id: int) -> list[Player]:
+    # FIXME idk, что тут с типизацией, правда
+    return session.query(Player) \
+        .filter(Player.is_active) \
+        .filter(Player.team_id == team_id) \
+        .all()
+
+
 def save(session: Session, player: Player) -> Player:
     session.add(player)
     session.flush()
