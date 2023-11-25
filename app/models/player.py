@@ -13,7 +13,6 @@ class Player(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     gto_id: Mapped[str]
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
-    active: Mapped[bool] = mapped_column(default=False)
     nickname: Mapped[str] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))

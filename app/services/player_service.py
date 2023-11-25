@@ -63,20 +63,6 @@ def is_in_team(player_id: int, team_id: int) -> bool:
         return player.team_id == team_id
     
 
-def set_active(player_id: int, active: bool) -> PlayerSchema:
-    with db.create_session() as session:
-        player = player_repo.get_by_id(session, player_id)
-        if player is None:
-            raise EntityNotFoundException("Player was not found")
-
-        player.active = active
-        player = player_repo.save(session, player)
-
-        session.refresh(player)
-
-        return PlayerSchema.model_validate(player)
-
-
 def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
     with db.create_session() as session:
         player = player_repo.get_by_id(session, player_id)
