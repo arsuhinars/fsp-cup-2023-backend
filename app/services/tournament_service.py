@@ -72,3 +72,22 @@ def delete(tournament_id: int) -> bool:
 
         tournament_repo.delete(session, tournament)
         return True
+
+
+def change_state(tournament_id: int, state: TournamentStateEnum) -> TournamentSchema:
+    tournament = get_by_id(tournament_id)
+    match tournament.state, state:
+        case TournamentStateEnum.JUST_CREATED, TournamentStateEnum.REGISTRATION_OPENED:
+            tournament.state = state
+            return update(tournament_id, TournamentUpdateSchema(state=state))
+        case TournamentStateEnum.REGISTRATION_OPENED, TournamentStateEnum.REGISTRATION_CLOSED:
+            tournament.state = state
+            return update(tournament_id, TournamentUpdateSchema(state=state))
+        case TournamentStateEnum.REGISTRATION_CLOSED, TournamentStateEnum.ONGOING:
+            tournament.state = state
+            return update(tournament_id, TournamentUpdateSchema(state=state))
+        case TournamentStateEnum.ONGOING, TournamentStateEnum.FINISHED:
+            tournament.state = state
+            return update(tournament_id, TournamentUpdateSchema(state=state))
+        case _:
+            raise Exception("Can't change state")
