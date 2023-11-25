@@ -2,7 +2,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict
 
-from app.schemas.player_schema import PlayerSchema
+from app.schemas.player_schema import ShortPlayerSchema
 from app.schemas.team_schema import TeamSchema
 
 
@@ -17,5 +17,5 @@ class TournamentRequestSchema(BaseModel):
 
     id: int
     team: TeamSchema
-    active_players: list[PlayerSchema]
+    active_players: list[ShortPlayerSchema]
     status: TournamentRequestStatus

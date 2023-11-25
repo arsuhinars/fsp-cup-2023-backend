@@ -34,6 +34,7 @@ class Tournament(Base):
     tournament_requests: Mapped[list["TournamentRequest"]] = relationship(
         back_populates="tournament"
     )
+    matches: Mapped[list["Match"]] = relationship(back_populates="tournament")
 
     @hybrid_property
     def main_judge_full_name(self):

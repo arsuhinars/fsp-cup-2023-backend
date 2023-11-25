@@ -17,6 +17,7 @@ class Match(Base):
     team_composition_winner_id: Mapped[int | None] = mapped_column(
         ForeignKey("team_composition.id")
     )
+    tournament_id: Mapped[int] = mapped_column(ForeignKey("tournament.id"))
     order_number: Mapped[int]
     part_number: Mapped[int]
 
@@ -29,3 +30,4 @@ class Match(Base):
     team_composition_winner: Mapped["TeamComposition | None"] = relationship(
         foreign_keys=[team_composition_winner_id], back_populates="win_matches"
     )
+    tournament: Mapped["Tournament"] = relationship(back_populates="matches")

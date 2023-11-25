@@ -12,14 +12,18 @@ class TournamentRequest(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     tournament_id: Mapped[int] = mapped_column(ForeignKey("tournament.id"))
     team_composition_id: Mapped[int] = mapped_column(ForeignKey("team_composition.id"))
-    status: Mapped[TournamentRequestStatus] = mapped_column(default=TournamentRequestStatus.PENDING)
+    status: Mapped[TournamentRequestStatus] = mapped_column(
+        default=TournamentRequestStatus.PENDING
+    )
 
     team_composition: Mapped["TeamComposition"] = relationship(
         foreign_keys=[team_composition_id]
     )
-    tournament: Mapped["Tournament"] = relationship(
-        foreign_keys=[tournament_id]
-    )
+    tournament: Mapped["Tournament"] = relationship(foreign_keys=[tournament_id])
+
+    @hybrid_property
+    def team(self):
+        return self.team_composition.team
 
     @hybrid_property
     def active_players(self):
