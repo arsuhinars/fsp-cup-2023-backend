@@ -1,6 +1,4 @@
-from typing import Annotated
-
-from pydantic import AliasPath, BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 from app.schemas.player_schema import PlayerSchema
 from app.schemas.team_schema import TeamSchema
@@ -18,5 +16,5 @@ class ShortTeamCompositionSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    team_id: Annotated[int, Field(serialization_alias=AliasPath("team", "id"))]
-    team_name: Annotated[str, Field(serialization_alias=AliasPath("team", "name"))]
+    team_id: int
+    team_name: str
