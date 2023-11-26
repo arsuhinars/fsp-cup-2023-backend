@@ -4,6 +4,8 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing_extensions import Annotated
 
+from app.schemas.team_schema import TeamSchema
+
 
 class JudgeRankEnum(StrEnum):
     MATCH_JUDGE = "MATCH_JUDGE"
@@ -22,7 +24,7 @@ PasswordField = Annotated[
     Field(
         min_length=8,
         max_length=50,
-        pattern=r"[a-zA-Z0-9!()?{}_`~;:@#$%^&+=\-.]*",
+        pattern=r"^[ -9;-~]*$",
         examples=["password"],
     ),
 ]
@@ -42,6 +44,7 @@ class UserSchema(BaseModel):
     email: EmailStr
     role: UserRole
     judge_rank: JudgeRankEnum | None = None
+    team: TeamSchema | None
 
 
 class UserCreateSchema(BaseModel):

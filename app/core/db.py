@@ -17,6 +17,7 @@ from app.models.team_composition import TeamComposition  # noqa: F401, E402
 from app.models.team_composition_set import TeamCompositionSet  # noqa: F401, E402
 from app.models.tournament import Tournament  # noqa: F401, E402
 from app.models.tournament_set import TournamentSet  # noqa: F401, E402
+from app.models.tournament_request import TournamentRequest  # noqa: F401, E402y
 from app.models.user import User  # noqa: F401, E402
 
 _engine: Engine = None

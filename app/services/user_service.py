@@ -18,7 +18,7 @@ from app.utils import map_model_to_orm
 
 
 def create(dto: UserCreateSchema) -> UserSchema:
-    user = User(**dto.model_dump(exclude=["password"]))
+    user = User(**dto.model_dump(exclude={"password"}))
 
     if user.role != UserRole.JUDGE and user.judge_rank is not None:
         raise InvalidFormatException(

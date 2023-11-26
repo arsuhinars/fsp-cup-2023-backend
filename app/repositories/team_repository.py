@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import select
+from sqlalchemy.sql import and_, select, true
 
 from app.models.team import Team
 from app.models.team_composition import TeamComposition
@@ -15,7 +15,7 @@ def get_by_id(session: Session, team_id: int) -> Team | None:
 
 def get_active_composition(session: Session, team: Team) -> TeamComposition | None:
     q = select(TeamComposition).where(
-        TeamComposition.is_active and TeamComposition.team_id == team.id
+        and_(TeamComposition.is_active == true(), TeamComposition.team_id == team.id)
     )
 
     return session.execute(q).scalar_one_or_none()

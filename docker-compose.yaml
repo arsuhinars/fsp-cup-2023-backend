@@ -51,6 +51,17 @@ services:
     secrets:
       - db_username
       - db_password
+  
+  frontend:
+    build:
+      context: frontend
+      target: release
+      args:
+        FRONTEND_PORT: 5173
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
 
 secrets:

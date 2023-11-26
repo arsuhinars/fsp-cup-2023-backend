@@ -8,11 +8,12 @@ from app.schemas.player_schema import (
     PlayerCreateSchema,
     PlayerSchema,
     PlayerUpdateSchema,
+    ShortPlayerSchema,
 )
 from app.utils import map_model_to_orm
 
 
-def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
+def create_in_team(dto: PlayerCreateSchema, team_id: int) -> PlayerSchema:
     player = Player(**dto.model_dump())
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
@@ -27,19 +28,23 @@ def create_in_team(team_id: int, dto: PlayerCreateSchema) -> PlayerSchema:
         return PlayerSchema.model_validate(player.convert_to_dict())
 
 
-def get_all_in_team(team_id: int) -> list[PlayerSchema]:
+def get_team_players(team_id: int) -> list[ShortPlayerSchema]:
     with db.create_session() as session:
         team = team_repo.get_by_id(session, team_id)
         if team is None:
             raise EntityNotFoundException("Team was not found")
 
         active_composition = team_repo.get_active_composition(session, team)
-        players = map(
-            lambda p: p.convert_to_dict(active_composition),
-            team.players,
-        )
+        players = player_repo.get_by_team_id(session, team_id)
 
-        return list(map(PlayerSchema.model_validate, players))
+        return list(
+            map(
+                lambda p: ShortPlayerSchema.model_validate(
+                    p.convert_to_dict(active_composition)
+                ),
+                players,
+            )
+        )
 
 
 def get_by_id(player_id: int) -> PlayerSchema:
@@ -73,7 +78,9 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
 
         if dto.is_active_in_team and not is_active_in_team:
             if active_composition is None:
-                active_composition = TeamComposition(team_id=player.team_id)
+                active_composition = TeamComposition(
+                    team_id=player.team_id, is_active=True
+                )
                 session.add(active_composition)
 
             active_composition.players.add(player)
@@ -81,14 +88,16 @@ def update(player_id: int, dto: PlayerUpdateSchema) -> PlayerSchema:
             active_composition.players.remove(player)
 
         map_model_to_orm(dto, player)
-        player = player_repo.save(session, player)
 
+        session.add(player)
+        session.flush()
+        session.commit()
         session.refresh(player)
 
         return PlayerSchema.model_validate(player.convert_to_dict(active_composition))
 
 
-def delete(player_id: int) -> PlayerSchema:
+def delete(player_id: int) -> None:
     with db.create_session() as session:
         player = player_repo.get_by_id(session, player_id)
         if player is None or player.deleted:

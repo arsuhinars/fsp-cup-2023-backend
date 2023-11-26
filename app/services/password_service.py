@@ -20,5 +20,5 @@ def encode_password(raw_password: str, salt: bytes) -> bytes:
     )
 
 
-def compare_passwords(raw_password: str, salt: bytes, encoded_password: bytes) -> bytes:
+def compare_passwords(raw_password: str, salt: bytes, encoded_password: bytes) -> bool:
     return compare_digest(encode_password(raw_password, salt), encoded_password)
